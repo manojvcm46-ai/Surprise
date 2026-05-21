@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why You're My Best Friend! 💖</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="./cause.css">
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <!-- Background Music Audio Tag -->
+    <audio id="bgMusic" loop>
+        <source src="Music/Neeyum Nanum.mpeg" type="audio/mpeg">
+        <source src="https://archive.org/download/HappyBirthdayInstrumentalPianoViaInstrumentals.com.ng/Happy%20Birthday%20Instrumental%20Piano%20via%20Instrumentals.com.ng.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Mouse Tracking Glow Spotlight -->
+    <div class="mouse-glow"></div>
+
+    <div class="custom-cursor">
+        <svg viewBox="0 0 24 24">
+            <path fill="#ff69b4"
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+    </div>
+
+    <div class="container">
+        <h1>Happy Birthday AnuSri 💖</h1>
+
+        <div id="reasons-container"></div>
+
+        <button class="shuffle-button">Click Here... 💕</button>
+        <div class="reason-counter"></div>
+
+        <div class="ending-section">
+            <div class="teddy-hug">
+                <img src="Image/d1.png" alt="Teddy Hug">
+            </div>
+            <div class="ending-text">You're the BESTEST ! 💖</div>
+        </div>
+    </div>
+
+    <!-- Cute Meme Popup Card -->
+    <div class="meme-popup" id="meme-popup" style="display: none;">
+        <span class="close-meme" id="close-meme">&times;</span>
+        <div class="meme-content">
+            <img src="GIF/love.gif" id="meme-img" alt="Cute Meme Reaction">
+            <p id="meme-caption">Me after your one text 😭💖</p>
+        </div>
+    </div>
+
+    <script src="cause.js"></script>
+</body>
+
+</html>

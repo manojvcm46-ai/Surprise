@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Secret Note For You... 💌</title>
+    <!-- GSAP for smooth animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700&family=Dancing+Script:wght@700&family=Quicksand:wght@500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #fff5f5, #ffebee, #ffebf3, #fff0f5);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem 1rem;
+        }
+
+        /* Custom Spotlight & Cursor */
+        .custom-cursor {
+            width: 30px;
+            height: 30px;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s;
+        }
+
+        .custom-cursor svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 5px rgba(255, 182, 193, 0.5));
+        }
+
+        .mouse-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.22) 0%, rgba(255, 182, 193, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            mix-blend-mode: screen;
+            will-change: transform;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+        }
+
+        h1 {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 2.8rem;
+            color: #ff69b4;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+            margin-bottom: 0.5rem;
+            animation: floatHeader 3s ease-in-out infinite;
+        }
+
+        .prompt {
+            font-size: 1.1rem;
+            color: #7a7a7a;
+            margin-bottom: 3rem;
+            font-weight: 500;
+        }
+
+        /* Interactive Envelope Styles */
+        .envelope-container {
+            position: relative;
+            width: 380px;
+            height: 260px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-color: #fccbda;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.15);
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        /* Bottom flap */
+        .envelope-wrapper::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 190px solid transparent;
+            border-right: 190px solid transparent;
+            border-bottom: 135px solid #f9b6cc;
+            border-radius: 0 0 20px 20px;
+            z-index: 6;
+        }
+
+        /* Left flap */
+        .envelope-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-top: 130px solid transparent;
+            border-bottom: 130px solid transparent;
+            border-left: 190px solid #f8a5c2;
+            border-radius: 0 0 0 20px;
+            z-index: 5;
+        }
+
+        /* Right flap */
+        .envelope-right-flap {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-top: 130px solid transparent;
+            border-bottom: 130px solid transparent;
+            border-right: 190px solid #f8a5c2;
+            border-radius: 0 0 20px 0;
+            z-index: 5;
+        }
+
+        /* Top folding flap */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 190px solid transparent;
+            border-right: 190px solid transparent;
+            border-top: 135px solid #f78fb3;
+            transform-origin: top;
+            z-index: 7;
+            transition: transform 0.6s ease;
+        }
+
+        /* Letter card tucked inside */
+        .letter-card {
+            position: absolute;
+            bottom: 15px;
+            left: 20px;
+            width: 340px;
+            height: 220px;
+            background: #fffdf5;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 2px dashed #fcd1d9;
+            transform: translateY(0);
+            transition: transform 0.8s ease, z-index 0.8s ease;
+        }
+
+        .letter-content {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4a2d8a;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.5s ease 0.6s, transform 0.5s ease 0.6s;
+        }
+
+        .letter-heart {
+            font-size: 2rem;
+            color: #ff69b4;
+            margin-top: 0.5rem;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.5s ease 0.9s, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.9s;
+        }
+
+        /* Seal sticker on top of flap */
+        .seal {
+            position: absolute;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background: #ff477e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            z-index: 8;
+            box-shadow: 0 4px 10px rgba(255, 71, 126, 0.4);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .seal:hover {
+            transform: translateX(-50%) scale(1.15) rotate(15deg);
+        }
+
+        /* Action CTA button at bottom */
+        .bottom-action {
+            margin-top: 5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: all 0.8s ease;
+        }
+
+        .bottom-action.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff69b4, #da70d6);
+            border: none;
+            border-radius: 50px;
+            padding: 1.2rem 2.8rem;
+            font-size: 1.3rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: 'Comic Neue', cursive;
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+            animation: bounceButton 3s ease infinite;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.6);
+            background: linear-gradient(45deg, #da70d6, #9b6dff);
+        }
+
+        /* Floating elements */
+        .floating {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-love-text {
+            position: fixed;
+            color: rgba(255, 105, 180, 0.38);
+            font-family: 'Dancing Script', cursive;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1;
+            text-shadow: 0 0 8px rgba(255, 105, 180, 0.2);
+        }
+
+        .click-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 1.5rem;
+            animation: rotateParticle 1.5s linear;
+        }
+
+        /* Keyframes */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatHeader {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes rotateParticle {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(0.2) rotate(360deg); }
+        }
+
+        @keyframes bounceButton {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            * {
+                cursor: auto !important;
+            }
+
+            .custom-cursor, .mouse-glow {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .prompt {
+                font-size: 0.95rem;
+                margin-bottom: 2rem;
+            }
+
+            .envelope-container {
+                width: 290px;
+                height: 200px;
+            }
+
+            .envelope-wrapper::before {
+                border-left-width: 145px;
+                border-right-width: 145px;
+                border-bottom-width: 105px;
+            }
+
+            .envelope-wrapper::after {
+                border-top-width: 100px;
+                border-bottom-width: 100px;
+                border-left-width: 145px;
+            }
+
+            .envelope-right-flap {
+                border-top-width: 100px;
+                border-bottom-width: 100px;
+                border-right-width: 145px;
+            }
+
+            .envelope-flap {
+                border-left-width: 145px;
+                border-right-width: 145px;
+                border-top-width: 105px;
+            }
+
+            .letter-card {
+                width: 250px;
+                height: 170px;
+                left: 20px;
+                bottom: 15px;
+                padding: 1rem;
+            }
+
+            .letter-content {
+                font-size: 1.15rem;
+            }
+
+            .seal {
+                top: 80px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Music Audio Tag -->
+    <audio id="bgMusic" loop>
+        <source src="Music/Yaro.mpeg" type="audio/mpeg">
+        <source src="https://archive.org/download/HappyBirthdayInstrumentalPianoViaInstrumentals.com.ng/Happy%20Birthday%20Instrumental%20Piano%20via%20Instrumentals.com.ng.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Mouse Tracking Glow Spotlight -->
+    <div class="mouse-glow"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor">
+        <svg viewBox="0 0 24 24">
+            <path fill="#ff69b4"
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+    </div>
+
+    <div class="container">
+        <h1>A Secret Note For You... 💌</h1>
+        <p class="prompt">Tap the heart wax seal to open the letter...</p>
+
+        <div class="envelope-container">
+            <!-- Top folding flap -->
+            <div class="envelope-flap"></div>
+            
+            <!-- Envelope Body -->
+            <div class="envelope-wrapper">
+                <div class="envelope-right-flap"></div>
+                
+                <!-- Heart wax seal -->
+                <div class="seal">💝</div>
+
+                <!-- Letter Inside -->
+                <div class="letter-card">
+                    <p class="letter-content">
+                        "Even in my worst days, your messages make me smile 💖<br>
+                        You have this beautiful way of brightening my life just by being yourself..."
+                    </p>
+                    <div class="letter-heart">💖</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-action">
+            <a href="ending.html" class="cta-button">Our Forever... 💖</a>
+        </div>
+    </div>
+
+    <script>
+        // Custom spotlight glow trail follow cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const mouseGlow = document.querySelector('.mouse-glow');
+
+        document.addEventListener('mousemove', (e) => {
+            if (cursor) {
+                gsap.to(cursor, {
+                    x: e.clientX - 15,
+                    y: e.clientY - 15,
+                    duration: 0.15
+                });
+            }
+            if (mouseGlow) {
+                gsap.to(mouseGlow, {
+                    x: e.clientX - 150,
+                    y: e.clientY - 150,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            }
+        });
+
+        // Envelope opening animation logic using GSAP timeline
+        let isEnvelopeOpen = false;
+        const envelopeContainer = document.querySelector('.envelope-container');
+        const envelopeFlap = document.querySelector('.envelope-flap');
+        const letterCard = document.querySelector('.letter-card');
+        const sealSticker = document.querySelector('.seal');
+        const letterContent = document.querySelector('.letter-content');
+        const letterHeart = document.querySelector('.letter-heart');
+        const bottomAction = document.querySelector('.bottom-action');
+
+        function openEnvelope() {
+            if (isEnvelopeOpen) return;
+            isEnvelopeOpen = true;
+
+            const tl = gsap.timeline();
+
+            // 1. Pop out/shrink the seal sticker
+            tl.to(sealSticker, {
+                scale: 0,
+                opacity: 0,
+                duration: 0.4,
+                ease: "back.in(1.7)"
+            });
+
+            // 2. Rotate flap open 180 degrees backwards
+            tl.to(envelopeFlap, {
+                rotationX: 180,
+                duration: 0.6,
+                ease: "power1.inOut"
+            }, "-=0.2");
+
+            // Adjust z-index of flap so letter can slide out of it
+            tl.set(envelopeFlap, { zIndex: 1 });
+
+            // 3. Slide letter card upwards out of the envelope
+            const slideHeight = window.innerWidth <= 480 ? -120 : -160;
+            tl.to(letterCard, {
+                y: slideHeight,
+                duration: 0.8,
+                ease: "power2.out"
+            });
+
+            // Change z-index of letter card to front
+            tl.set(letterCard, { zIndex: 10 });
+
+            // 4. Scale up the letter card and make it look perfectly prominent
+            tl.to(letterCard, {
+                scale: window.innerWidth <= 480 ? 1.15 : 1.25,
+                boxShadow: "0 20px 45px rgba(255, 105, 180, 0.25)",
+                duration: 0.6,
+                ease: "back.out(1.2)"
+            });
+
+            // 5. Fade in and animate letters / text details
+            tl.to(letterContent, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out"
+            }, "-=0.2");
+
+            tl.to(letterHeart, {
+                opacity: 1,
+                scale: 1,
+                duration: 0.6,
+                ease: "bounce.out"
+            }, "-=0.4");
+
+            // 6. Reveal the romantic CTA button
+            tl.call(() => {
+                bottomAction.classList.add('show');
+            }, null, "-=0.3");
+
+            // Trigger beautiful celebratory heart explosions
+            setTimeout(() => {
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        const x = window.innerWidth / 2 + (Math.random() - 0.5) * 300;
+                        const y = window.innerHeight / 2 + (Math.random() - 0.5) * 200;
+                        spawnCelebrationHeart(x, y);
+                    }, i * 100);
+                }
+            }, 1800);
+        }
+
+        sealSticker.addEventListener('click', openEnvelope);
+        envelopeFlap.addEventListener('click', openEnvelope);
+
+        // Click heart explosion particle effect
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.cta-button') || e.target.closest('.seal') || e.target.closest('.envelope-flap')) {
+                return; // Avoid intercepting interactive clicks
+            }
+
+            for (let i = 0; i < 6; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'click-heart';
+                heart.innerHTML = '💖';
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                document.body.appendChild(heart);
+
+                gsap.to(heart, {
+                    y: e.clientY - 120 - Math.random() * 80,
+                    x: e.clientX + (Math.random() - 0.5) * 160,
+                    opacity: 0,
+                    scale: Math.random() * 0.6 + 0.4,
+                    duration: 1 + Math.random() * 0.5,
+                    ease: "power2.out",
+                    onComplete: () => heart.remove()
+                });
+            }
+        });
+
+        // Celebration explosion helper
+        function spawnCelebrationHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.className = 'click-heart';
+            heart.innerHTML = ['💖', '💕', '💌', '🌸', '✨'][Math.floor(Math.random() * 5)];
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            document.body.appendChild(heart);
+
+            gsap.to(heart, {
+                y: y - 100 - Math.random() * 100,
+                x: x + (Math.random() - 0.5) * 200,
+                opacity: 0,
+                scale: Math.random() * 0.8 + 0.6,
+                duration: 1.5 + Math.random() * 0.5,
+                ease: "power2.out",
+                onComplete: () => heart.remove()
+            });
+        }
+
+        // Floating love words drifting up
+        const loveTexts = [
+            "pretty girl 💖",
+            "mine 😌",
+            "cutieeee 🌸",
+            "my peace 🕊️",
+            "pookie 💌",
+            "baby 💕",
+            "my world 🌎"
+        ];
+
+        function spawnLoveText() {
+            const t = document.createElement('div');
+            t.className = 'floating-love-text';
+            t.innerHTML = loveTexts[Math.floor(Math.random() * loveTexts.length)];
+            t.style.left = Math.random() * 80 + 10 + 'vw';
+            t.style.bottom = '-50px';
+            t.style.fontSize = (Math.random() * 6 + 14) + 'px';
+            document.body.appendChild(t);
+
+            gsap.to(t, {
+                y: -window.innerHeight - 100,
+                x: (Math.random() - 0.5) * 150,
+                rotation: (Math.random() - 0.5) * 35,
+                opacity: 0,
+                duration: 8 + Math.random() * 4,
+                ease: "power1.out",
+                onComplete: () => t.remove()
+            });
+        }
+
+        // Background floating particles
+        function createFloatingElement() {
+            const elements = ['🌸', '✨', '💖', '🦋', '⭐'];
+            const element = document.createElement('div');
+            element.className = 'floating';
+            element.textContent = elements[Math.floor(Math.random() * elements.length)];
+            element.style.left = Math.random() * window.innerWidth + 'px';
+            element.style.top = window.innerHeight + 10 + 'px';
+            element.style.fontSize = (Math.random() * 20 + 12) + 'px';
+            document.body.appendChild(element);
+
+            gsap.to(element, {
+                y: -window.innerHeight - 50,
+                x: '+=' + (Math.random() * 100 - 50),
+                rotation: Math.random() * 360,
+                duration: Math.random() * 8 + 8,
+                opacity: 0,
+                onComplete: () => element.remove()
+            });
+        }
+
+        setInterval(createFloatingElement, 1600);
+        setInterval(spawnLoveText, 2400);
+
+        // Music setup
+        window.addEventListener('load', () => {
+            const audio = document.getElementById('bgMusic');
+            if (audio) {
+                audio.volume = 0.5;
+                if (performance.getEntriesByType("navigation")[0].type === "reload") {
+                    sessionStorage.removeItem('bgMusicTime');
+                }
+                const savedTime = sessionStorage.getItem('bgMusicTime');
+                if (savedTime) audio.currentTime = parseFloat(savedTime);
+                audio.play().catch(err => {
+                    console.log("Autoplay blocked, waiting for user click.");
+                    document.addEventListener('click', () => {
+                        audio.play().catch(e => console.log(e));
+                    }, { once: true });
+                });
+                setInterval(() => sessionStorage.setItem('bgMusicTime', audio.currentTime), 100);
+            }
+        });
+
+        // Transition to end
+        const ctaBtn = document.querySelector('.cta-button');
+        ctaBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            gsap.to('body', {
+                opacity: 0,
+                duration: 1.2,
+                onComplete: () => {
+                    window.location.href = 'ending.html';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

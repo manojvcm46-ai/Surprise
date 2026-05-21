@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Beautiful Memory Lane ✨</title>
+    <!-- GSAP for beautiful animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700&family=Dancing+Script:wght@700&family=Quicksand:wght@500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #ffe6e6, #e6e6ff, #ffebf5, #f0ffe8);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            padding: 2rem 1rem;
+            position: relative;
+        }
+
+        /* Custom Spotlight & Cursor */
+        .custom-cursor {
+            width: 30px;
+            height: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s;
+        }
+
+        .custom-cursor svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 5px rgba(255, 182, 193, 0.5));
+        }
+
+        .mouse-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.22) 0%, rgba(255, 182, 193, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            mix-blend-mode: screen;
+            will-change: transform;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header section */
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            margin-top: 1rem;
+        }
+
+        header h1 {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 3.5rem;
+            color: #ff69b4;
+            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+            margin-bottom: 1rem;
+            animation: floatHeader 3s ease-in-out infinite;
+        }
+
+        header p {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.2rem;
+            color: #6a6a6a;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Timeline path container */
+        .timeline {
+            position: relative;
+            margin: 0 auto 5rem auto;
+            padding: 2rem 0;
+        }
+
+        /* The vertical line */
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: linear-gradient(to bottom, #ff69b4, #da70d6, #9b6dff, #ff69b4);
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+            border-radius: 2px;
+        }
+
+        /* Timeline Items */
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 20px 40px;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .timeline-item.left {
+            left: 0;
+        }
+
+        .timeline-item.right {
+            left: 50%;
+        }
+
+        /* Badges positioned on central line */
+        .timeline-badge {
+            position: absolute;
+            top: 40px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #ff69b4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 10;
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item.left .timeline-badge {
+            right: -25px;
+        }
+
+        .timeline-item.right .timeline-badge {
+            left: -25px;
+        }
+
+        /* Hover animations for timeline nodes */
+        .timeline-item:hover .timeline-badge {
+            background: #ff69b4;
+            transform: scale(1.15) rotate(15deg);
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.8);
+        }
+
+        /* Elegant Glassmorphism Cards */
+        .timeline-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 192, 203, 0.45);
+            border-radius: 24px;
+            padding: 1.8rem;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.08), inset 0 0 10px rgba(255, 255, 255, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.2);
+            border-color: rgba(255, 105, 180, 0.65);
+            background: rgba(255, 255, 255, 0.88);
+        }
+
+        /* Timeline Images */
+        .timeline-img-wrapper {
+            width: 100%;
+            height: 280px;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+            background: linear-gradient(135deg, rgba(255, 182, 193, 0.12), rgba(186, 85, 211, 0.12));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .timeline-img-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.6s ease;
+        }
+
+        .timeline-card:hover .timeline-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        /* Card Content Text */
+        .timeline-date {
+            font-family: 'Dancing Script', cursive;
+            color: #ff69b4;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .timeline-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #4a2ea2;
+            margin-bottom: 0.8rem;
+        }
+
+        .timeline-caption {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #5d5d5d;
+        }
+
+        /* Action CTA button at bottom */
+        .bottom-action {
+            text-align: center;
+            margin-top: 5rem;
+            margin-bottom: 4rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #ff69b4, #da70d6);
+            border: none;
+            border-radius: 50px;
+            padding: 1.2rem 2.8rem;
+            font-size: 1.3rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: 'Comic Neue', cursive;
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+            animation: bounceButton 3s ease infinite;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.6);
+            background: linear-gradient(45deg, #da70d6, #9b6dff);
+        }
+
+        /* Floating elements */
+        .floating {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-love-text {
+            position: fixed;
+            color: rgba(255, 105, 180, 0.38);
+            font-family: 'Dancing Script', cursive;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1;
+            text-shadow: 0 0 8px rgba(255, 105, 180, 0.2);
+        }
+
+        .click-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 1.5rem;
+            animation: rotateParticle 1.5s linear;
+        }
+
+        /* Keyframes */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatHeader {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes rotateParticle {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(0.2) rotate(360deg); }
+        }
+
+        @keyframes bounceButton {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            * {
+                cursor: auto !important;
+            }
+
+            .custom-cursor, .mouse-glow {
+                display: none !important;
+            }
+
+            body {
+                padding: 1rem;
+            }
+
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                padding-left: 70px;
+                padding-right: 15px;
+            }
+
+            .timeline-badge {
+                left: 5px !important;
+                right: auto !important;
+                width: 44px;
+                height: 44px;
+                font-size: 1.25rem;
+                top: 30px;
+            }
+            
+            .timeline-card {
+                padding: 1.2rem;
+            }
+
+            .timeline-img-wrapper {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Music Audio Tag -->
+    <audio id="bgMusic" loop>
+        <source src="Music/Miss.mpeg" type="audio/mpeg">
+        <source src="https://archive.org/download/HappyBirthdayInstrumentalPianoViaInstrumentals.com.ng/Happy%20Birthday%20Instrumental%20Piano%20via%20Instrumentals.com.ng.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Mouse Tracking Glow Spotlight -->
+    <div class="mouse-glow"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor">
+        <svg viewBox="0 0 24 24">
+            <path fill="#ff69b4"
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Our Beautiful Memory Lane ✨</h1>
+            <p>Every milestone we've shared, every story we've written, and every little moment we've lived has been absolutely magical. Here is a trip down our gorgeous story lane... 💖</p>
+        </header>
+
+        <div class="timeline">
+            <!-- 1️⃣ Love Journey 💖 -->
+            <div class="timeline-item left">
+                <div class="timeline-badge">💖</div>
+                <div class="timeline-card">
+                    <div class="timeline-img-wrapper">
+                         <img src="Image/image_1.png" alt="Love Journey">
+                    </div>
+                    <div class="timeline-date">Our 4+ Years Together... 💙</div>
+                    <div class="timeline-title">1️⃣ Love Journey 💖</div>
+                    <p class="timeline-caption">We started our love journey randomly with just a simple conversation… but now, we have crossed more than 4 years together. Between these years, we faced lots of fights, misunderstandings, pain, overthinking, and emotional moments… but at the same time, we also shared unlimited love, care, support, and happiness. No matter what happened between us, our bond never became weak. Instead, day by day, our love only keeps growing stronger and deeper. 💙 Even after all the ups and downs, one thing never changed — my love for you.</p>
+                </div>
+            </div>
+
+            <!-- 2️⃣ Our Video Call Memories 📱💕 -->
+            <div class="timeline-item right">
+                <div class="timeline-badge">📱</div>
+                <div class="timeline-card">
+                    <div class="timeline-img-wrapper">
+                         <img src="Image/Image_2.png" alt="Our Video Call Memories">
+                    </div>
+                    <div class="timeline-date">Screens, Smiles & Sleepy Faces... 🥺💖</div>
+                    <div class="timeline-title">2️⃣ Our Video Call Memories 📱💕</div>
+                    <p class="timeline-caption">In this entire love journey, the thing that stayed with us the most was our video calls. Through these calls, we created so many unforgettable memories together. Late-night talks, random laughs, sleepy faces, silly fights, emotional moments, and those “don’t cut the call” nights… everything became the most precious part of my life. 🥺💖 Very soon, we won’t need video calls anymore. Instead of seeing each other through a screen, we’ll meet every single day in real life. I’m waiting for that beautiful day so badly. Miss you lots and love you forever, di wifeyyy 💙</p>
+                </div>
+            </div>
+
+            <!-- 3️⃣ Our Best Memories 🌧️🚶‍♂️💑 -->
+            <div class="timeline-item left">
+                <div class="timeline-badge">🌧️</div>
+                <div class="timeline-card">
+                    <div class="timeline-img-wrapper">
+                         <img src="Image/Image_3.png" alt="Our Best Memories">
+                    </div>
+                    <div class="timeline-date">Our Walks & Travel Diaries... 💑</div>
+                    <div class="timeline-title">3️⃣ Our Best Memories 🌧️🚶‍♂️💑</div>
+                    <p class="timeline-caption">One of the happiest days of my life is the day we created all those beautiful memories together. The pictures we took, the places we visited, our random romance moments, our rainy travels, our walks together… everything became the best memories in my entire life. 💖 I still dream about recreating moments like that again — bike rides together, long car drives, random night trips, and peaceful journeys with you beside me. Those memories will always stay special in my heart forever. 💙</p>
+                </div>
+            </div>
+
+            <!-- 4️⃣ My Future Dream — Our Marriage 💍✨ -->
+            <div class="timeline-item right">
+                <div class="timeline-badge">💍</div>
+                <div class="timeline-card">
+                    <div class="timeline-img-wrapper">
+                         <img src="Image/Image_4.png" alt="Our Marriage Dream">
+                    </div>
+                    <div class="timeline-date">Waiting patiently for our day... ✨</div>
+                    <div class="timeline-title">4️⃣ My Future Dream — Our Marriage 💍✨</div>
+                    <p class="timeline-caption">My biggest future plan is our marriage. 💖 Maybe it will take another 2 or 3 years… but I’m waiting patiently for that beautiful day. I know our marriage will be the best and happiest phase of our lives. I have so many dreams for our future together. After marriage, let’s complete every dream one by one. Late-night bike rides 🌙, traveling to other countries ✈️, long drives 🚗, cute shopping dates 🛍️, watching movies together 🍿, cooking together 🍳, and living every single day together happily 💕. I just want a simple peaceful life… with you beside me forever.</p>
+                </div>
+            </div>
+
+            <!-- 5️⃣ My Dream Life — You, Me & Our Baby 👨‍👩‍👧💖 -->
+            <div class="timeline-item left">
+                <div class="timeline-badge">👨‍👩‍👧</div>
+                <div class="timeline-card">
+                    <div class="timeline-img-wrapper">
+                         <img src="Image/Image_5.png" alt="Our Beautiful Future Family">
+                    </div>
+                    <div class="timeline-date">Endless love forever... 🥺💙</div>
+                    <div class="timeline-title">5️⃣ My Dream Life — You, Me & Our Baby 👨‍👩‍👧💖</div>
+                    <p class="timeline-caption">This is the most beautiful part of my life dream… You, me, and our little baby together. 🥺💙 For this one future scene alone, I’m ready to struggle through anything in life. No matter what happens in the future… For me, it will always be YOU. And for you, it will always be ME. 💖 Our small family, our happiness, our peace — that’s all I need in life. I miss you so much. I love you endlessly, di wifeyyy 💙🥺</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-action">
+            <a href="quiz.html" class="cta-button">Play Romantic Quiz... 🧩</a>
+        </div>
+    </div>
+
+    <script>
+        // Custom spotlight glow trail follow cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const mouseGlow = document.querySelector('.mouse-glow');
+
+        document.addEventListener('mousemove', (e) => {
+            if (cursor) {
+                gsap.to(cursor, {
+                    x: e.clientX - 15,
+                    y: e.clientY - 15,
+                    duration: 0.15
+                });
+            }
+            if (mouseGlow) {
+                gsap.to(mouseGlow, {
+                    x: e.clientX - 150,
+                    y: e.clientY - 150,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            }
+        });
+
+        // Click heart explosion particle effect
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.cta-button')) {
+                return; // Avoid intercepting cta redirects
+            }
+
+            for (let i = 0; i < 6; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'click-heart';
+                heart.innerHTML = '💖';
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                document.body.appendChild(heart);
+
+                gsap.to(heart, {
+                    y: -120 - Math.random() * 80,
+                    x: (Math.random() - 0.5) * 160,
+                    opacity: 0,
+                    scale: Math.random() * 0.6 + 0.4,
+                    duration: 1 + Math.random() * 0.5,
+                    ease: "power2.out",
+                    onComplete: () => heart.remove()
+                });
+            }
+        });
+
+        // Floating love words drifting up
+        const loveTexts = [
+            "pretty girl 💖",
+            "mine 😌",
+            "cutieeee 🌸",
+            "my peace 🕊️",
+            "pookie 💌",
+            "baby 💕",
+            "my world 🌎"
+        ];
+
+        function spawnLoveText() {
+            const t = document.createElement('div');
+            t.className = 'floating-love-text';
+            t.innerHTML = loveTexts[Math.floor(Math.random() * loveTexts.length)];
+            t.style.left = Math.random() * 80 + 10 + 'vw';
+            t.style.bottom = '-50px';
+            t.style.fontSize = (Math.random() * 6 + 14) + 'px';
+            document.body.appendChild(t);
+
+            gsap.to(t, {
+                y: -window.innerHeight - 100,
+                x: (Math.random() - 0.5) * 150,
+                rotation: (Math.random() - 0.5) * 35,
+                opacity: 0,
+                duration: 8 + Math.random() * 4,
+                ease: "power1.out",
+                onComplete: () => t.remove()
+            });
+        }
+
+        // Background floating particles
+        function createFloatingElement() {
+            const elements = ['🌸', '✨', '💖', '🦋', '⭐'];
+            const element = document.createElement('div');
+            element.className = 'floating';
+            element.textContent = elements[Math.floor(Math.random() * elements.length)];
+            element.style.left = Math.random() * window.innerWidth + 'px';
+            element.style.top = window.innerHeight + 10 + 'px';
+            element.style.fontSize = (Math.random() * 20 + 12) + 'px';
+            document.body.appendChild(element);
+
+            gsap.to(element, {
+                y: -window.innerHeight - 50,
+                x: '+=' + (Math.random() * 100 - 50),
+                rotation: Math.random() * 360,
+                duration: Math.random() * 8 + 8,
+                opacity: 0,
+                onComplete: () => element.remove()
+            });
+        }
+
+        setInterval(createFloatingElement, 1500);
+        setInterval(spawnLoveText, 2500);
+
+        // Timeline items scroll/entrance animations
+        window.addEventListener('load', () => {
+            // Animate items one after another
+            gsap.to('.timeline-item', {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                stagger: 0.35,
+                ease: "power3.out"
+            });
+
+            // Start background music
+            const audio = document.getElementById('bgMusic');
+            if (audio) {
+                audio.volume = 0.5;
+                if (performance.getEntriesByType("navigation")[0].type === "reload") {
+                    sessionStorage.removeItem('bgMusicTime');
+                }
+                const savedTime = sessionStorage.getItem('bgMusicTime');
+                if (savedTime) audio.currentTime = parseFloat(savedTime);
+                audio.play().catch(err => {
+                    console.log("Autoplay blocked, waiting for user click.");
+                    document.addEventListener('click', () => {
+                        audio.play().catch(e => console.log(e));
+                    }, { once: true });
+                });
+                setInterval(() => sessionStorage.setItem('bgMusicTime', audio.currentTime), 100);
+            }
+        });
+
+        // CTA Transition Animation
+        const ctaBtn = document.querySelector('.cta-button');
+        ctaBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetUrl = ctaBtn.getAttribute('href');
+            gsap.to('body', {
+                opacity: 0,
+                duration: 1,
+                onComplete: () => {
+                    window.location.href = targetUrl;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

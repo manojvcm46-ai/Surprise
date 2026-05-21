@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Love Coupons 🎫💖</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Comic+Neue:wght@700&family=Dancing+Script:wght@700&family=Quicksand:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #fdfbfb, #f3e5f5, #e8eaf6, #fdfbfb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            padding: 2rem 1rem 6rem;
+        }
+
+        /* Custom Cursor & Glow */
+        .custom-cursor {
+            width: 30px;
+            height: 30px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+        }
+
+        .custom-cursor svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 5px rgba(255, 182, 193, 0.5));
+        }
+
+        .mouse-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.22) 0%, rgba(255, 182, 193, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            mix-blend-mode: screen;
+            will-change: transform;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 3.5rem;
+            color: #9c27b0;
+            text-shadow: 2px 2px 4px rgba(156, 39, 176, 0.2);
+            animation: floatHeader 3s ease-in-out infinite;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Coupons Grid */
+        .coupons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1000px;
+            z-index: 1;
+        }
+
+        /* Coupon Card */
+        .coupon-wrapper {
+            perspective: 1000px;
+            height: 160px;
+        }
+
+        .coupon-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .coupon-inner.is-redeemed {
+            transform: rotateY(180deg);
+        }
+
+        .coupon-front, .coupon-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+            display: flex;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Coupon Front */
+        .coupon-front {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 2px dashed #ff99cc;
+            position: relative;
+        }
+
+        .coupon-front::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 25px;
+            background: #ff99cc;
+            border-right: 2px dashed white;
+        }
+        
+        .coupon-content {
+            padding: 1.2rem 1rem 1.2rem 2.5rem;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .coupon-emoji {
+            font-size: 2.5rem;
+            margin-right: 1rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            animation: bounce 2s infinite;
+        }
+
+        .coupon-text h3 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #e91e63;
+            margin-bottom: 0.3rem;
+        }
+
+        .coupon-text p {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.3;
+        }
+
+        /* Coupon Back (Redeemed State) */
+        .coupon-back {
+            background: linear-gradient(135deg, #f3e5f5, #fce4ec);
+            border: 2px solid #e91e63;
+            transform: rotateY(180deg);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .stamp {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 2.5rem;
+            color: #e91e63;
+            border: 4px solid #e91e63;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            transform: rotate(-15deg);
+            opacity: 0.8;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+            box-shadow: 0 0 10px rgba(233, 30, 99, 0.2);
+        }
+
+        /* CTA Button */
+        .bottom-action {
+            margin-top: 4rem;
+            z-index: 1;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #e91e63, #9c27b0);
+            border: none;
+            border-radius: 50px;
+            padding: 1.2rem 2.8rem;
+            font-size: 1.3rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: 'Comic Neue', cursive;
+            box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+            animation: bounceButton 3s ease infinite;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1) translateY(-3px);
+            box-shadow: 0 10px 25px rgba(233, 30, 99, 0.6);
+        }
+
+        /* Floating elements */
+        .floating { position: fixed; pointer-events: none; z-index: 1; }
+
+        .floating-love-text {
+            position: fixed;
+            color: rgba(233, 30, 99, 0.3);
+            font-family: 'Dancing Script', cursive;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 1;
+            text-shadow: 0 0 8px rgba(233, 30, 99, 0.15);
+        }
+
+        .click-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 1.5rem;
+            animation: rotateParticle 1.5s linear;
+        }
+
+        /* Confetti particle */
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        /* Keyframes */
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes floatHeader { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes bounceButton { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes rotateParticle { 0% { transform: scale(1) rotate(0deg); } 100% { transform: scale(0.2) rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            * {
+                cursor: auto !important;
+            }
+
+            .custom-cursor, .mouse-glow {
+                display: none !important;
+            }
+
+            .header h1 { font-size: 2.5rem; }
+            .coupons-grid { grid-template-columns: 1fr; padding: 0 1rem; }
+            .coupon-text h3 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="Music/Yaro.mpeg" type="audio/mpeg">
+        <source src="https://archive.org/download/HappyBirthdayInstrumentalPianoViaInstrumentals.com.ng/Happy%20Birthday%20Instrumental%20Piano%20via%20Instrumentals.com.ng.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="mouse-glow"></div>
+    <div class="custom-cursor">
+        <svg viewBox="0 0 24 24"><path fill="#e91e63" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+
+    <div class="header">
+        <h1>Your Love Coupons 🎫</h1>
+        <p>Tap a coupon to redeem it... use them wisely! 😉💖</p>
+    </div>
+
+    <div class="coupons-grid" id="coupons-container">
+        <!-- Coupons will be generated here by JS -->
+    </div>
+
+    <div class="bottom-action">
+        <a href="letter.html" class="cta-button">I Have A Secret For You... 💌</a>
+    </div>
+
+    <script>
+        const couponsData = [
+            { icon: "🤗", title: "One Free Tight Hug", desc: "Redeemable anytime, anywhere, no questions asked." },
+            { icon: "📞", title: "Late Night Call", desc: "I'll stay up and talk to you, no matter how sleepy I am." },
+            { icon: "🍦", title: "Ice Cream Date", desc: "Your choice of flavor, my treat. Let's go!" },
+            { icon: "💌", title: "Handwritten Letter", desc: "A special note straight from my heart to yours." },
+            { icon: "🎬", title: "Movie Night", desc: "You pick the movie, I'll bring the snacks." },
+            { icon: "🌙", title: "'I'm Not Mad' Pass", desc: "Get out of one silly fight completely free." }
+        ];
+
+        const container = document.getElementById('coupons-container');
+
+        couponsData.forEach((coupon, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'coupon-wrapper';
+            wrapper.style.opacity = 0;
+            
+            wrapper.innerHTML = `
+                <div class="coupon-inner" onclick="redeemCoupon(this, event)">
+                    <div class="coupon-front">
+                        <div class="coupon-content">
+                            <div class="coupon-emoji">${coupon.icon}</div>
+                            <div class="coupon-text">
+                                <h3>${coupon.title}</h3>
+                                <p>${coupon.desc}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="coupon-back">
+                        <div class="stamp">REDEEMED 💖</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(wrapper);
+
+            // Animate entry
+            gsap.to(wrapper, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                delay: index * 0.15,
+                ease: "back.out(1.2)"
+            });
+            gsap.from(wrapper, { y: 50, duration: 0.8, delay: index * 0.15 });
+        });
+
+        function redeemCoupon(element, event) {
+            if (element.classList.contains('is-redeemed')) return;
+            
+            element.classList.add('is-redeemed');
+            
+            // Launch confetti from click position
+            const rect = element.getBoundingClientRect();
+            const x = event.clientX || rect.left + rect.width / 2;
+            const y = event.clientY || rect.top + rect.height / 2;
+            
+            for(let i=0; i<3; i++) {
+                setTimeout(() => launchConfetti(x, y), i * 150);
+            }
+        }
+
+        function launchConfetti(x, y) {
+            const colors = ['#e91e63', '#ff69b4', '#9c27b0', '#ffeb3b', '#4caf50', '#2196f3', '#ff9800'];
+            
+            for (let i = 0; i < 20; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = x + 'px';
+                confetti.style.top = y + 'px';
+                confetti.style.width = (Math.random() * 8 + 5) + 'px';
+                confetti.style.height = (Math.random() * 8 + 5) + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                document.body.appendChild(confetti);
+
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 200 + 100;
+
+                gsap.to(confetti, {
+                    x: Math.cos(angle) * velocity,
+                    y: Math.sin(angle) * velocity + 150,
+                    rotation: Math.random() * 720 - 360,
+                    opacity: 0,
+                    duration: 1 + Math.random(),
+                    ease: "power2.out",
+                    onComplete: () => confetti.remove()
+                });
+            }
+        }
+
+        // ====== CURSOR & GLOW ======
+        const cursor = document.querySelector('.custom-cursor');
+        const mouseGlow = document.querySelector('.mouse-glow');
+        document.addEventListener('mousemove', (e) => {
+            if (cursor) gsap.to(cursor, { x: e.clientX - 15, y: e.clientY - 15, duration: 0.15 });
+            if (mouseGlow) gsap.to(mouseGlow, { x: e.clientX - 150, y: e.clientY - 150, duration: 0.3, ease: "power2.out" });
+        });
+
+        // ====== CLICK HEARTS ======
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.coupon-inner') || e.target.closest('.cta-button')) return;
+            for (let i = 0; i < 5; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'click-heart';
+                heart.innerHTML = '💖';
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                document.body.appendChild(heart);
+                gsap.to(heart, {
+                    y: -120 - Math.random() * 80,
+                    x: (Math.random() - 0.5) * 160,
+                    opacity: 0, scale: Math.random() * 0.6 + 0.4,
+                    duration: 1 + Math.random() * 0.5,
+                    ease: "power2.out",
+                    onComplete: () => heart.remove()
+                });
+            }
+        });
+
+        // ====== FLOATING TEXTS & ELEMENTS ======
+        const loveTexts = ["pretty girl 💖", "mine 😌", "cutieeee 🌸", "my peace 🕊️", "pookie 💌", "baby 💕", "my world 🌎"];
+        function spawnLoveText() {
+            const t = document.createElement('div');
+            t.className = 'floating-love-text';
+            t.innerHTML = loveTexts[Math.floor(Math.random() * loveTexts.length)];
+            t.style.left = Math.random() * 80 + 10 + 'vw';
+            t.style.bottom = '-50px';
+            t.style.fontSize = (Math.random() * 6 + 14) + 'px';
+            document.body.appendChild(t);
+            gsap.to(t, { y: -window.innerHeight - 100, x: (Math.random() - 0.5) * 150, rotation: (Math.random() - 0.5) * 35, opacity: 0, duration: 8 + Math.random() * 4, ease: "power1.out", onComplete: () => t.remove() });
+        }
+
+        function createFloatingElement() {
+            const elements = ['🌸', '✨', '💖', '🦋', '⭐'];
+            const el = document.createElement('div');
+            el.className = 'floating';
+            el.textContent = elements[Math.floor(Math.random() * elements.length)];
+            el.style.left = Math.random() * window.innerWidth + 'px';
+            el.style.top = window.innerHeight + 10 + 'px';
+            el.style.fontSize = (Math.random() * 18 + 10) + 'px';
+            document.body.appendChild(el);
+            gsap.to(el, { y: -window.innerHeight - 50, x: '+=' + (Math.random() * 100 - 50), rotation: Math.random() * 360, duration: Math.random() * 8 + 8, opacity: 0, onComplete: () => el.remove() });
+        }
+
+        setInterval(createFloatingElement, 1800);
+        setInterval(spawnLoveText, 2800);
+
+        // ====== MUSIC ======
+        window.addEventListener('load', () => {
+            const audio = document.getElementById('bgMusic');
+            if (audio) {
+                audio.volume = 0.5;
+                if (performance.getEntriesByType("navigation")[0].type === "reload") {
+                    sessionStorage.removeItem('bgMusicTime');
+                }
+                const savedTime = sessionStorage.getItem('bgMusicTime');
+                if (savedTime) audio.currentTime = parseFloat(savedTime);
+                audio.play().catch(err => {
+                    console.log("Autoplay blocked, waiting for user click.");
+                    document.addEventListener('click', () => {
+                        audio.play().catch(e => console.log(e));
+                    }, { once: true });
+                });
+                setInterval(() => sessionStorage.setItem('bgMusicTime', audio.currentTime), 100);
+            }
+        });
+
+        // CTA transition
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.cta-button')) {
+                e.preventDefault();
+                gsap.to('body', {
+                    opacity: 0, duration: 1,
+                    onComplete: () => { window.location.href = 'letter.html'; }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

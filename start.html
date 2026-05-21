@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday AnuSri 💙</title>
+    <!-- Favicon to clear 404 errors -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
+    <!-- Google Fonts for Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP for Smooth Cinematic Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Background Music Audio Tag -->
+    <audio id="bgMusic" loop>
+        <source src="Music/Happy_Birthday.mpeg" type="audio/mpeg">
+        <source src="https://archive.org/download/HappyBirthdayInstrumentalPianoViaInstrumentals.com.ng/Happy%20Birthday%20Instrumental%20Piano%20via%20Instrumentals.com.ng.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Cinematic Opening Screen -->
+    <div class="intro-screen">
+        <div class="intro-content">
+            <h1 class="intro-title">Heyy AnuSri 💙</h1>
+            <p class="intro-subtext">Tuning your heartstrings... 🎼</p>
+        </div>
+    </div>
+
+    <!-- Ambient Glow Background Blobs -->
+    <div class="ambient-blobs">
+        <div class="blob blob-pink"></div>
+        <div class="blob blob-purple"></div>
+        <div class="blob blob-light"></div>
+    </div>
+
+    <!-- Interactive Mouse Follow Spotlight -->
+    <div class="mouse-glow"></div>
+    <div class="cursor"></div>
+
+    <!-- Main Premium Page Container -->
+    <div class="main-container">
+        <!-- Top Center: Glassmorphism Floating Relationship Card -->
+        <div class="love-card-wrapper">
+            <div class="love-counter-card">
+                <div class="timer-line">
+                    <span class="timer-emoji">💙</span> We survived <span id="days-val" class="timer-number">----</span> days together
+                </div>
+                <div class="timer-line">
+                    <span class="timer-emoji">⏰</span> <span id="hours-val" class="timer-number">--</span> hours
+                </div>
+                <div class="timer-line">
+                    <span class="timer-emoji">🕰️</span> <span id="minutes-val" class="timer-number">--</span> minutes
+                </div>
+                <div class="timer-line">
+                    <span class="timer-emoji">💫</span> <span id="seconds-val" class="timer-number">--</span> seconds together <span class="love-heart-pulse">💖</span>
+                </div>
+                
+                <!-- Deep Emotional Line Under Timer -->
+                <p class="emotional-line">“Every second with you became my favorite memory 💙”</p>
+            </div>
+        </div>
+
+        <!-- Center: Glowing Birthday Greetings -->
+        <div class="birthday-message-section">
+            <h1 class="glowing-birthday-title">Happy Birthday AnuSri 💙</h1>
+            <h2 class="romantic-subtitle">Hey You Know What! You're the most adorable human I ever met! 💖</h2>
+        </div>
+
+        <!-- Bottom Center: Centered Pink Glowing Glass Pill Button Stack -->
+        <div class="cta-section">
+            <button class="cta-button-pill" id="enterBtn" onclick="goToNextPage('cake.html')">
+                Move to Next Surprise... 🎂
+            </button>
+            <button class="next-btn" id="storyBtn" onclick="goToNextPage('cause.html')">
+                Enter Our Storylane 💖
+            </button>
+        </div>
+
+        <script>
+            function goToNextPage(page) {
+                // Smooth GSAP Emitter for cinematic heart explosion effects
+                const storyBtn = document.getElementById('storyBtn');
+                const sourceTop = storyBtn ? storyBtn.getBoundingClientRect().top : (window.innerHeight / 2);
+                for (let i = 0; i < 15; i++) {
+                    const h = document.createElement('div');
+                    h.className = 'click-heart';
+                    h.innerHTML = ['💖', '💕', '💙', '✨'][Math.floor(Math.random() * 4)];
+                    h.style.left = (window.innerWidth / 2) + 'px';
+                    h.style.top = sourceTop + 'px';
+                    document.body.appendChild(h);
+
+                    gsap.to(h, {
+                        x: (window.innerWidth / 2) + (Math.random() - 0.5) * 350,
+                        y: sourceTop - 150 - Math.random() * 150,
+                        scale: Math.random() * 0.8 + 0.4,
+                        opacity: 0,
+                        duration: 1.4 + Math.random() * 0.4,
+                        ease: "power2.out",
+                        onComplete: () => h.remove()
+                    });
+                }
+
+                // Opacity fade transition with 800ms timing
+                document.body.style.transition = "0.8s ease";
+                document.body.style.opacity = "0";
+
+                setTimeout(() => {
+                    window.location.href = page;
+                }, 800);
+            }
+        </script>
+    </div>
+
+    <!-- Script file -->
+    <script src="script.js"></script>
+</body>
+
+</html>

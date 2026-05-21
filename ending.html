@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>And if I had to choose again... 💖</title>
+    <!-- GSAP for smooth animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Dancing+Script:wght@700&family=Quicksand:wght@500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #08080a;
+            font-family: 'Quicksand', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 2rem;
+        }
+
+        /* Ambient Glow in center */
+        .ambient-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 105, 180, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Custom Spotlight & Cursor */
+        .custom-cursor {
+            width: 30px;
+            height: 30px;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: screen;
+            transition: transform 0.1s;
+        }
+
+        .custom-cursor svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.8));
+        }
+
+        .mouse-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.15) 0%, rgba(255, 182, 193, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            mix-blend-mode: screen;
+            will-change: transform;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+        }
+
+        /* Elegant cinematic message typing */
+        .ending-message {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2rem;
+            color: #ffffff;
+            line-height: 1.8;
+            margin-bottom: 4rem;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 105, 180, 0.4);
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Blinking typing cursor */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 3.5rem;
+            background-color: #ff69b4;
+            margin-left: 5px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+
+        /* The End Glowing reveal */
+        .the-end {
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 2.5rem;
+            color: #ff69b4;
+            opacity: 0;
+            transform: scale(0.8);
+            text-shadow: 0 0 12px rgba(255, 105, 180, 0.8), 0 0 25px rgba(255, 105, 180, 0.5);
+            animation: pulseSign 3s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        /* Interactive floating items */
+        .floating {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .click-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            font-size: 1.5rem;
+            animation: rotateParticle 1.5s linear;
+        }
+
+        /* Keyframes */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes pulseSign {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.08); filter: brightness(1.2); }
+        }
+
+        @keyframes rotateParticle {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(0.2) rotate(360deg); }
+        }
+
+        #fireworks-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            * {
+                cursor: auto !important;
+            }
+
+            .custom-cursor, .mouse-glow {
+                display: none !important;
+            }
+
+            .ending-message {
+                font-size: 2.2rem;
+                min-height: 140px;
+            }
+
+            .typing-cursor {
+                height: 2.5rem;
+            }
+
+            .the-end {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Music Audio Tag -->
+    <audio id="bgMusic" loop>
+        <source src="Music/Happy_Birthday.mpeg" type="audio/mpeg">
+        <source src="https://archive.org/download/HappyBirthdayInstrumentalPianoViaInstrumentals.com.ng/Happy%20Birthday%20Instrumental%20Piano%20via%20Instrumentals.com.ng.mp3" type="audio/mpeg">
+    </audio>
+
+    <canvas id="fireworks-canvas"></canvas>
+
+    <div class="ambient-glow"></div>
+
+    <!-- Mouse Tracking Glow Spotlight -->
+    <div class="mouse-glow"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor">
+        <svg viewBox="0 0 24 24">
+            <path fill="#ff69b4"
+                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        </svg>
+    </div>
+
+    <div class="container">
+        <!-- Cinematic typed message -->
+        <div class="ending-message">
+            <span id="typed-text"></span><span class="typing-cursor"></span>
+        </div>
+
+        <!-- Pulser -->
+        <div class="the-end" id="the-end-text">The End 🌸</div>
+    </div>
+
+    <script>
+        // Custom spotlight glow trail follow cursor
+        const cursor = document.querySelector('.custom-cursor');
+        const mouseGlow = document.querySelector('.mouse-glow');
+
+        document.addEventListener('mousemove', (e) => {
+            if (cursor) {
+                gsap.to(cursor, {
+                    x: e.clientX - 15,
+                    y: e.clientY - 15,
+                    duration: 0.15
+                });
+            }
+            if (mouseGlow) {
+                gsap.to(mouseGlow, {
+                    x: e.clientX - 200,
+                    y: e.clientY - 200,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+            }
+        });
+
+        // Click heart explosion particle effect (glowing white/pink in dark)
+        document.addEventListener('click', (e) => {
+            for (let i = 0; i < 8; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'click-heart';
+                heart.innerHTML = ['💖', '✨', '🌸', '💕'][Math.floor(Math.random() * 4)];
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                heart.style.textShadow = '0 0 10px rgba(255, 105, 180, 0.8)';
+                document.body.appendChild(heart);
+
+                gsap.to(heart, {
+                    y: e.clientY - 150 - Math.random() * 80,
+                    x: e.clientX + (Math.random() - 0.5) * 200,
+                    opacity: 0,
+                    scale: Math.random() * 0.8 + 0.4,
+                    duration: 1.2 + Math.random() * 0.6,
+                    ease: "power2.out",
+                    onComplete: () => heart.remove()
+                });
+            }
+        });
+
+        // Typewriter sequence
+        const textToType = "And if I had to love someone again... it would still be you 💖";
+        const typedTextElement = document.getElementById('typed-text');
+        const theEndElement = document.getElementById('the-end-text');
+        const typingCursorElement = document.querySelector('.typing-cursor');
+        let index = 0;
+
+        function typeLetter() {
+            if (index < textToType.length) {
+                typedTextElement.innerHTML += textToType.charAt(index);
+                index++;
+                
+                // Slightly randomize typing speed for a natural human touch
+                const nextDelay = textToType.charAt(index - 1) === '.' ? 650 : (Math.random() * 70 + 80);
+                setTimeout(typeLetter, nextDelay);
+            } else {
+                // Done typing!
+                setTimeout(() => {
+                    // Hide the typing cursor nicely
+                    gsap.to(typingCursorElement, {
+                        opacity: 0,
+                        duration: 0.5,
+                        onComplete: () => typingCursorElement.style.display = 'none'
+                    });
+
+                    // Reveal the glowing Pulsing Sign-off: "The End 🌸"
+                    gsap.to(theEndElement, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 2.0,
+                        ease: "power2.out"
+                    });
+                    
+                    // Trigger gentle final romantic explosion circles
+                    startFinalCelebration();
+                }, 1000);
+            }
+        }
+
+        // Fireworks implementation
+        const canvas = document.getElementById('fireworks-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let fireworks = [];
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 3 + 1;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.life = 1.0;
+                this.decay = Math.random() * 0.015 + 0.015;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.05; // gravity
+                this.life -= this.decay;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${this.color}, ${this.life})`;
+                ctx.fill();
+            }
+        }
+
+        class Firework {
+            constructor(x, targetY) {
+                this.x = x;
+                this.y = height;
+                this.targetY = targetY;
+                this.vy = -Math.random() * 3 - 6;
+                const colors = ['255,105,180', '255,215,0', '238,130,238', '255,255,255'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.y += this.vy;
+                if (this.y <= this.targetY || this.vy >= 0) {
+                    this.explode();
+                    return false; // dead
+                }
+                return true; // alive
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = `rgb(${this.color})`;
+                ctx.fill();
+            }
+            explode() {
+                for (let i = 0; i < 50; i++) {
+                    particles.push(new Particle(this.x, this.y, this.color));
+                }
+            }
+        }
+
+        function animateFireworks() {
+            ctx.fillStyle = 'rgba(8, 8, 10, 0.2)'; // trail effect
+            ctx.fillRect(0, 0, width, height);
+
+            if (Math.random() < 0.03) {
+                const x = Math.random() * width;
+                const targetY = Math.random() * (height / 2);
+                fireworks.push(new Firework(x, targetY));
+            }
+
+            fireworks = fireworks.filter(f => {
+                f.draw();
+                return f.update();
+            });
+
+            particles = particles.filter(p => {
+                p.draw();
+                p.update();
+                return p.life > 0;
+            });
+
+            requestAnimationFrame(animateFireworks);
+        }
+        animateFireworks();
+
+        // Final floating elements
+        function createFloatingElement() {
+            const elements = ['🌸', '✨', '💖', '💕', '⭐'];
+            const element = document.createElement('div');
+            element.className = 'floating';
+            element.textContent = elements[Math.floor(Math.random() * elements.length)];
+            element.style.left = Math.random() * window.innerWidth + 'px';
+            element.style.top = window.innerHeight + 10 + 'px';
+            element.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            element.style.opacity = 0.5;
+            element.style.textShadow = '0 0 5px rgba(255, 105, 180, 0.4)';
+            document.body.appendChild(element);
+
+            gsap.to(element, {
+                y: -window.innerHeight - 50,
+                x: '+=' + (Math.random() * 120 - 60),
+                rotation: Math.random() * 360,
+                duration: Math.random() * 10 + 10,
+                opacity: 0,
+                onComplete: () => element.remove()
+            });
+        }
+
+        setInterval(createFloatingElement, 2000);
+
+        function startFinalCelebration() {
+            // Grand finale fireworks burst
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = (width / 5) * i + (width / 10);
+                    const targetY = height / 4 + (Math.random() * 100 - 50);
+                    const fw = new Firework(x, targetY);
+                    fw.explode();
+                }, i * 200);
+            }
+
+            // Keep launching occasional sparkle explosions near the text
+            setInterval(() => {
+                const x = window.innerWidth / 2 + (Math.random() - 0.5) * 350;
+                const y = window.innerHeight / 2 + (Math.random() - 0.5) * 200;
+                
+                for (let i = 0; i < 4; i++) {
+                    const spark = document.createElement('div');
+                    spark.className = 'click-heart';
+                    spark.innerHTML = '✨';
+                    spark.style.left = x + 'px';
+                    spark.style.top = y + 'px';
+                    document.body.appendChild(spark);
+
+                    gsap.to(spark, {
+                        y: y - 50 - Math.random() * 50,
+                        x: x + (Math.random() - 0.5) * 100,
+                        opacity: 0,
+                        scale: Math.random() * 0.6 + 0.3,
+                        duration: 1 + Math.random() * 0.5,
+                        onComplete: () => spark.remove()
+                    });
+                }
+            }, 3000);
+        }
+
+        // Initialize typing and background music on page load
+        window.addEventListener('load', () => {
+            // Delay typing start slightly for dramatic entry
+            setTimeout(typeLetter, 1200);
+
+            // Music loop
+            const audio = document.getElementById('bgMusic');
+            if (audio) {
+                audio.volume = 0.55;
+                if (performance.getEntriesByType("navigation")[0].type === "reload") {
+                    sessionStorage.removeItem('bgMusicTime');
+                }
+                const savedTime = sessionStorage.getItem('bgMusicTime');
+                if (savedTime) audio.currentTime = parseFloat(savedTime);
+                audio.play().catch(err => {
+                    console.log("Autoplay blocked, waiting for user click.");
+                    document.addEventListener('click', () => {
+                        audio.play().catch(e => console.log(e));
+                    }, { once: true });
+                });
+                setInterval(() => sessionStorage.setItem('bgMusicTime', audio.currentTime), 100);
+            }
+        });
+    </script>
+</body>
+
+</html>
