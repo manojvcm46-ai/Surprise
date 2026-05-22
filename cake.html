@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <script>(function () { var u = new Date("May 26, 2026 00:00:00").getTime(); if (Date.now() < u && localStorage.getItem('birthday_unlocked') !== 'true') { window.location.replace("index.html"); } })();</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make a Wish! 🎂</title>
     <!-- GSAP for robust high-fidelity animations -->
@@ -13,7 +15,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: none; /* Custom cursor */
+            cursor: none;
+            /* Custom cursor */
         }
 
         body {
@@ -49,20 +52,35 @@
 
         /* Custom Cursor & Glow */
         .custom-cursor {
-            width: 30px;
-            height: 30px;
             position: fixed;
-            top: 0;
-            left: 0;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff4fd8, #8f5bff);
+            box-shadow: 0 0 20px #ff4fd8;
             pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s;
+            animation: cursorPulse 2s infinite ease-in-out;
         }
 
-        .custom-cursor svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 5px rgba(255, 182, 193, 0.6));
+        @keyframes cursorPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 15px #ff4fd8, 0 0 5px #8f5bff;
+            }
+
+            50% {
+                box-shadow: 0 0 30px #ff4fd8, 0 0 15px #8f5bff;
+            }
+        }
+
+        .custom-cursor.hovered {
+            transform: translate(-50%, -50%) scale(1.6);
+            background: linear-gradient(45deg, #8f5bff, #ff4fd8);
+            box-shadow: 0 0 35px #8f5bff, 0 0 15px #ff4fd8;
         }
 
         .mouse-glow {
@@ -91,7 +109,7 @@
             padding: 22px 40px;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             color: #fff;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
             transition: all 1.5s cubic-bezier(0.16, 1, 0.3, 1);
@@ -101,7 +119,7 @@
         .lights-on .header {
             background: rgba(255, 255, 255, 0.8);
             border-color: rgba(255, 182, 193, 0.5);
-            box-shadow: 0 15px 35px rgba(233, 30, 99, 0.1), inset 0 1px 0 rgba(255,255,255,0.5);
+            box-shadow: 0 15px 35px rgba(233, 30, 99, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
             color: #e91e63;
             text-shadow: none;
         }
@@ -191,7 +209,7 @@
             border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
             z-index: 8;
             pointer-events: none;
-            box-shadow: inset -5px -5px 12px rgba(0,0,0,0.12), 2px 5px 10px rgba(0,0,0,0.1);
+            box-shadow: inset -5px -5px 12px rgba(0, 0, 0, 0.12), 2px 5px 10px rgba(0, 0, 0, 0.1);
         }
 
         .balloon-tail {
@@ -203,7 +221,8 @@
             height: 0;
             border-left: 6px solid transparent;
             border-right: 6px solid transparent;
-            border-bottom: 6px solid #ff80bf; /* matches dynamically */
+            border-bottom: 6px solid #ff80bf;
+            /* matches dynamically */
         }
 
         .balloon-string {
@@ -235,7 +254,7 @@
             height: 80px;
             background: radial-gradient(ellipse at center, #ffffff 0%, #f0f0f0 60%, #d5d5d5 100%);
             border-radius: 50%;
-            box-shadow: 
+            box-shadow:
                 0 12px 30px rgba(0, 0, 0, 0.4),
                 inset 0 -5px 12px rgba(0, 0, 0, 0.08),
                 inset 0 4px 10px rgba(255, 255, 255, 0.7);
@@ -337,7 +356,7 @@
             height: 66px;
             background: linear-gradient(to right, #3e2723 0%, #5d4037 25%, #8d6e63 50%, #5d4037 75%, #3e2723 100%);
             border-radius: 0 0 50% 50% / 0 0 24px 24px;
-            box-shadow: inset 0 -15px 15px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.25);
+            box-shadow: inset 0 -15px 15px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.25);
         }
 
         .tier-2 .tier-side {
@@ -345,7 +364,7 @@
             height: 61px;
             background: linear-gradient(to right, #cc0066 0%, #ff3399 25%, #ff80bf 50%, #ff3399 75%, #cc0066 100%);
             border-radius: 0 0 50% 50% / 0 0 19px 19px;
-            box-shadow: inset 0 -12px 12px rgba(0,0,0,0.12), 0 3px 6px rgba(0,0,0,0.18);
+            box-shadow: inset 0 -12px 12px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.18);
         }
 
         .tier-3 .tier-side {
@@ -353,7 +372,7 @@
             height: 56px;
             background: linear-gradient(to right, #ffccd5 0%, #ffe6eb 25%, #ffffff 50%, #ffe6eb 75%, #ffccd5 100%);
             border-radius: 0 0 50% 50% / 0 0 14px 14px;
-            box-shadow: inset 0 -10px 10px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: inset 0 -10px 10px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         /* Icing Drips Container */
@@ -370,7 +389,7 @@
         .drip {
             position: absolute;
             border-radius: 0 0 6px 6px;
-            box-shadow: inset -1px -2px 3px rgba(0,0,0,0.15), 1px 2px 2px rgba(0,0,0,0.1);
+            box-shadow: inset -1px -2px 3px rgba(0, 0, 0, 0.15), 1px 2px 2px rgba(0, 0, 0, 0.1);
             transform-origin: top center;
         }
 
@@ -390,7 +409,7 @@
             width: 14px;
             height: 14px;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            box-shadow: 1px 2px 3px rgba(0,0,0,0.12), inset -1px -1px 2px rgba(0,0,0,0.08);
+            box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.12), inset -1px -1px 2px rgba(0, 0, 0, 0.08);
             z-index: 4;
         }
 
@@ -410,7 +429,7 @@
             position: absolute;
             pointer-events: none;
             z-index: 3;
-            box-shadow: 0.5px 1px 1.5px rgba(0,0,0,0.15);
+            box-shadow: 0.5px 1px 1.5px rgba(0, 0, 0, 0.15);
         }
 
         /* Strawberries decor */
@@ -420,7 +439,7 @@
             height: 26px;
             background: radial-gradient(circle at 35% 35%, #ff4d4d 0%, #c62828 80%);
             border-radius: 50% 50% 50% 50% / 35% 35% 65% 65%;
-            box-shadow: 1px 3px 6px rgba(0,0,0,0.25), inset -2px -2px 5px rgba(0,0,0,0.4);
+            box-shadow: 1px 3px 6px rgba(0, 0, 0, 0.25), inset -2px -2px 5px rgba(0, 0, 0, 0.4);
             z-index: 5;
             pointer-events: none;
         }
@@ -446,23 +465,32 @@
             cursor: pointer;
         }
 
-        .candle-container.candle1 { left: 35px; top: 12px; }
-        .candle-container.candle2 { left: 70px; top: 20px; }
-        .candle-container.candle3 { left: 105px; top: 12px; }
+        .candle-container.candle1 {
+            left: 35px;
+            top: 12px;
+        }
+
+        .candle-container.candle2 {
+            left: 70px;
+            top: 20px;
+        }
+
+        .candle-container.candle3 {
+            left: 105px;
+            top: 12px;
+        }
 
         .candle {
             width: 10px;
             height: 45px;
-            background: repeating-linear-gradient(
-                -45deg,
-                #fff,
-                #fff 4px,
-                #e91e63 4px,
-                #e91e63 8px
-            );
+            background: repeating-linear-gradient(-45deg,
+                    #fff,
+                    #fff 4px,
+                    #e91e63 4px,
+                    #e91e63 8px);
             border-radius: 3px;
             position: relative;
-            box-shadow: inset -2px 0 rgba(0,0,0,0.15), 1px 1px 3px rgba(0,0,0,0.2);
+            box-shadow: inset -2px 0 rgba(0, 0, 0, 0.15), 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .candle::before {
@@ -473,7 +501,8 @@
             transform: translateX(-50%);
             width: 2px;
             height: 6px;
-            background: #444; /* wick */
+            background: #444;
+            /* wick */
         }
 
         /* 3-Layer flickering candle flames */
@@ -568,13 +597,25 @@
         }
 
         @keyframes flicker {
-            0% { transform: translateX(-50%) scale(1) rotate(-1.5deg); }
-            100% { transform: translateX(-50%) scale(1.15) rotate(2deg); }
+            0% {
+                transform: translateX(-50%) scale(1) rotate(-1.5deg);
+            }
+
+            100% {
+                transform: translateX(-50%) scale(1.15) rotate(2deg);
+            }
         }
 
         @keyframes glowPulse {
-            0% { transform: scale(1); opacity: 0.75; }
-            100% { transform: scale(1.2); opacity: 1; }
+            0% {
+                transform: scale(1);
+                opacity: 0.75;
+            }
+
+            100% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
         }
 
         /* Ambient spotlight glow behind the cake */
@@ -634,49 +675,129 @@
             box-shadow: 0 10px 25px rgba(233, 30, 99, 0.6);
         }
 
-        @keyframes bounceButton { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes bounceButton {
 
-        /* Mouse Trail heart elements */
-        .click-heart {
-            position: fixed;
-            pointer-events: none;
-            z-index: 10000;
-            font-size: 1.4rem;
-            animation: rotateParticle 1.5s linear forwards;
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
         }
 
-        @keyframes rotateParticle { 0% { transform: scale(1) rotate(0deg); } 100% { transform: scale(0.2) rotate(360deg); } }
+        /* click hearts styles removed */
 
         @media (max-width: 768px) {
             * {
                 cursor: auto !important;
             }
 
-            .custom-cursor, .mouse-glow {
+            .custom-cursor,
+            .mouse-glow {
                 display: none !important;
             }
         }
 
         @media (max-width: 480px) {
-            .header { padding: 16px 24px; }
-            .header h1 { font-size: 2.3rem; }
-            .header p { font-size: 0.95rem; }
-            .cake-container { transform: scale(0.85); margin-top: 15px; }
-            .cta-button { padding: 1rem 2.2rem; font-size: 1.15rem; }
+            .header {
+                padding: 16px 24px;
+            }
+
+            .header h1 {
+                font-size: 2.3rem;
+            }
+
+            .header p {
+                font-size: 0.95rem;
+            }
+
+            .cake-container {
+                transform: scale(0.85);
+                margin-top: 15px;
+            }
+
+            .cta-button {
+                padding: 1rem 2.2rem;
+                font-size: 1.15rem;
+            }
+        }
+
+        /* Premium Glassmorphism Music Toggle Button */
+        .music-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(255, 255, 255, 0.45);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.3),
+                inset 0 0 15px rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: floatBtn 3s ease-in-out infinite;
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.15) rotate(15deg);
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.8),
+                0 0 10px rgba(186, 85, 211, 0.6);
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .music-toggle:active {
+            transform: scale(0.9);
+        }
+
+        @keyframes floatBtn {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Ensure mobile compatibility by keeping hover effects clean on touch screens */
+        @media (max-width: 768px) {
+            .music-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <!-- Background Music (Preserves perfect continuity) -->
-    <audio id="bgMusic" loop>
-        <source src="Music/Happy_Birthday.mpeg" type="audio/mpeg">
-        <source src="https://archive.org/download/HappyBirthdayInstrumentalPianoViaInstrumentals.com.ng/Happy%20Birthday%20Instrumental%20Piano%20via%20Instrumentals.com.ng.mp3" type="audio/mpeg">
+    <!-- Background Music -->
+    <audio id="bgMusic" autoplay loop>
+        <source src="Music/cake.mp3" type="audio/mpeg">
     </audio>
 
+    <!-- Floating Music Button -->
+    <button class="music-toggle" onclick="toggleMusic()">
+        🎵
+    </button>
+
     <div class="mouse-glow"></div>
-    <div class="custom-cursor">
-        <svg viewBox="0 0 24 24"><path fill="#ff69b4" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-    </div>
+    <div class="custom-cursor"></div>
 
     <!-- Soft room light behind the cake -->
     <div class="room-glow"></div>
@@ -685,7 +806,7 @@
     <div class="header">
         <h1 id="title-text">Make a Wish! 🎂</h1>
         <p id="sub-text">Blow onto your microphone or tap the candles... 🌬️</p>
-        
+
         <!-- Microphone Blow Activation -->
         <div class="mic-toggle-container">
             <button id="mic-btn" class="mic-btn" onclick="toggleMic()">
@@ -705,23 +826,27 @@
                 <div class="tier-top"></div>
                 <div class="tier-side"></div>
             </div>
-            
+
             <!-- Tier 2: Middle Strawberry Mousse -->
             <div class="tier tier-2">
                 <div class="tier-top"></div>
                 <div class="tier-side"></div>
             </div>
-            
+
             <!-- Tier 3: Top Creamy Vanilla & Candles/Strawberries -->
             <div class="tier tier-3">
                 <div class="tier-top"></div>
                 <div class="tier-side"></div>
-                
+
                 <!-- Gourmet strawberries nested on top tier -->
-                <div class="strawberry" style="left: 18px; top: 10px; transform: translate(-50%, -50%) rotate(-15deg);"></div>
-                <div class="strawberry" style="left: 52px; top: 19px; transform: translate(-50%, -50%) rotate(5deg);"></div>
-                <div class="strawberry" style="left: 88px; top: 19px; transform: translate(-50%, -50%) rotate(-5deg);"></div>
-                <div class="strawberry" style="left: 122px; top: 10px; transform: translate(-50%, -50%) rotate(15deg);"></div>
+                <div class="strawberry" style="left: 18px; top: 10px; transform: translate(-50%, -50%) rotate(-15deg);">
+                </div>
+                <div class="strawberry" style="left: 52px; top: 19px; transform: translate(-50%, -50%) rotate(5deg);">
+                </div>
+                <div class="strawberry" style="left: 88px; top: 19px; transform: translate(-50%, -50%) rotate(-5deg);">
+                </div>
+                <div class="strawberry" style="left: 122px; top: 10px; transform: translate(-50%, -50%) rotate(15deg);">
+                </div>
 
                 <!-- 3 Flickering Candles -->
                 <div class="candle-container candle1" onclick="blowCandle(this)">
@@ -770,7 +895,7 @@
         // Generate slow-moving golden dust/stars in the background
         function spawnAmbientParticles() {
             const particleCount = 20;
-            for(let i=0; i<particleCount; i++) {
+            for (let i = 0; i < particleCount; i++) {
                 const star = document.createElement('div');
                 star.className = 'star-sparkle';
                 star.style.left = Math.random() * 100 + 'vw';
@@ -805,7 +930,7 @@
             for (let i = 0; i < count; i++) {
                 const leftPercent = 6 + (i * 88 / (count - 1));
                 const x = (leftPercent / 100) * width;
-                
+
                 // Ellipse mathematics to find perfect curved y-coordinate
                 const rx = width / 2;
                 const ry = ellipseHeight / 2;
@@ -814,11 +939,11 @@
 
                 const drip = document.createElement('div');
                 drip.className = 'drip';
-                
+
                 // Randomized width/height for organic drippings
                 const dWidth = Math.random() * 4 + 7; // 7px to 11px
                 const dHeight = Math.random() * 22 + 10; // 10px to 32px
-                
+
                 drip.style.left = `${leftPercent}%`;
                 drip.style.top = `${y - 1}px`;
                 drip.style.width = `${dWidth}px`;
@@ -826,7 +951,7 @@
                 drip.style.background = dripColor;
                 drip.style.transformOrigin = 'top center';
                 drip.style.transform = 'scaleY(0)';
-                
+
                 container.appendChild(drip);
             }
 
@@ -856,7 +981,7 @@
                 const phi = (i * Math.PI * 2) / count;
                 const rx = width / 2;
                 const ry = ellipseHeight / 2;
-                
+
                 const x = rx + rx * Math.cos(phi);
                 const y = ry + ry * Math.sin(phi);
 
@@ -870,7 +995,7 @@
                 dollop.style.background = creamBg;
                 dollop.style.transform = 'translate(-50%, -50%) scale(0)';
                 dollop.style.zIndex = isFront ? 4 : 1;
-                
+
                 container.appendChild(dollop);
             }
 
@@ -891,7 +1016,7 @@
             for (let i = 0; i < count; i++) {
                 const theta = Math.random() * Math.PI * 2;
                 const r = Math.sqrt(Math.random()) * 0.82; // distributed within ellipse boundary
-                
+
                 const rx = width / 2;
                 const ry = ellipseHeight / 2;
                 const x = r * rx * Math.cos(theta);
@@ -901,14 +1026,14 @@
                 sprinkle.className = 'sprinkle';
                 sprinkle.style.left = `${rx + x}px`;
                 sprinkle.style.top = `${ry + y}px`;
-                
+
                 const isHorizontal = Math.random() > 0.5;
                 sprinkle.style.width = isHorizontal ? '8px' : '3px';
                 sprinkle.style.height = isHorizontal ? '3px' : '8px';
                 sprinkle.style.borderRadius = '4px';
                 sprinkle.style.background = colors[Math.floor(Math.random() * colors.length)];
                 sprinkle.style.transform = `rotate(${Math.random() * 360}deg) scale(0)`;
-                
+
                 topFace.appendChild(sprinkle);
             }
 
@@ -945,15 +1070,15 @@
             const flame = element.querySelector('.flame');
             const smoke = element.querySelector('.smoke');
             const cakeGlow = element.querySelector('.flame-glow-on-cake');
-            
+
             if (flame.classList.contains('out')) return; // Already blown
 
             // Extinguish flame and surface glow with nice GSAP pop
             flame.classList.add('out');
             if (cakeGlow) cakeGlow.classList.add('out');
-            
+
             // Smoke drifting physics
-            gsap.fromTo(smoke, 
+            gsap.fromTo(smoke,
                 { opacity: 0.8, y: 0, scale: 1 },
                 { opacity: 0, y: -60, x: '+=10', scale: 3.5, duration: 1.6, ease: "power1.out" }
             );
@@ -988,17 +1113,17 @@
 
         function turnOnLights() {
             document.body.classList.add('lights-on');
-            
+
             const title = document.getElementById('title-text');
             const sub = document.getElementById('sub-text');
-            
+
             // Warmly update banner typography
             gsap.to([title, sub], {
                 opacity: 0,
                 y: -10,
                 duration: 0.4,
                 onComplete: () => {
-                    title.innerHTML = "Happy Birthday Pookie! 💖";
+                    title.innerHTML = "Happy Birthday Pattykutty! 💖";
                     sub.innerHTML = "May all your beautiful wishes come true ✨";
                     gsap.to([title, sub], { opacity: 1, y: 0, duration: 0.8 });
                 }
@@ -1052,16 +1177,16 @@
                 setTimeout(() => {
                     const balloon = document.createElement('div');
                     balloon.className = 'balloon';
-                    
+
                     const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
                     balloon.style.backgroundColor = color;
                     balloon.style.left = (Math.random() * 90 + 5) + 'vw';
                     balloon.style.bottom = '-110px';
-                    
+
                     const size = Math.random() * 18 + 42; // 42px to 60px
                     balloon.style.width = size + 'px';
                     balloon.style.height = (size * 1.25) + 'px';
-                    
+
                     // Tail triangle
                     const tail = document.createElement('div');
                     tail.className = 'balloon-tail';
@@ -1072,9 +1197,9 @@
                     const string = document.createElement('div');
                     string.className = 'balloon-string';
                     balloon.appendChild(string);
-                    
+
                     document.body.appendChild(balloon);
-                    
+
                     // Drifting rise physics
                     gsap.to(balloon, {
                         y: -(window.innerHeight + 250),
@@ -1100,7 +1225,7 @@
         function toggleMic() {
             const btn = document.getElementById('mic-btn');
             const status = document.getElementById('mic-status');
-            
+
             if (micStream) {
                 stopMic();
                 btn.classList.remove('active');
@@ -1111,43 +1236,43 @@
 
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    micStream = stream;
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    analyser = audioContext.createAnalyser();
-                    const source = audioContext.createMediaStreamSource(stream);
-                    
-                    analyser.fftSize = 256;
-                    const bufferLength = analyser.frequencyBinCount;
-                    dataArray = new Uint8Array(bufferLength);
-                    
-                    source.connect(analyser);
-                    
-                    btn.classList.add('active');
-                    btn.innerHTML = '<span class="mic-icon">🛑</span> Disable Mic Blow';
-                    status.innerHTML = 'Mic connected! Try blowing on your microphone... 🌬️';
+                    .then(stream => {
+                        micStream = stream;
+                        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        analyser = audioContext.createAnalyser();
+                        const source = audioContext.createMediaStreamSource(stream);
 
-                    // Track frequency volumes to capture breath puff
-                    micInterval = setInterval(() => {
-                        analyser.getByteFrequencyData(dataArray);
-                        
-                        let sum = 0;
-                        for (let i = 0; i < bufferLength; i++) {
-                            sum += dataArray[i];
-                        }
-                        const average = sum / bufferLength;
-                        
-                        // Volume spike signals blowing puff
-                        if (average > 55) {
-                            blowNextCandle();
-                        }
-                    }, 80);
-                })
-                .catch(err => {
-                    console.error("Mic access blocked:", err);
-                    status.innerHTML = '⚠️ Mic access denied or unsupported.';
-                    status.style.color = '#ff4d4d';
-                });
+                        analyser.fftSize = 256;
+                        const bufferLength = analyser.frequencyBinCount;
+                        dataArray = new Uint8Array(bufferLength);
+
+                        source.connect(analyser);
+
+                        btn.classList.add('active');
+                        btn.innerHTML = '<span class="mic-icon">🛑</span> Disable Mic Blow';
+                        status.innerHTML = 'Mic connected! Try blowing on your microphone... 🌬️';
+
+                        // Track frequency volumes to capture breath puff
+                        micInterval = setInterval(() => {
+                            analyser.getByteFrequencyData(dataArray);
+
+                            let sum = 0;
+                            for (let i = 0; i < bufferLength; i++) {
+                                sum += dataArray[i];
+                            }
+                            const average = sum / bufferLength;
+
+                            // Volume spike signals blowing puff
+                            if (average > 55) {
+                                blowNextCandle();
+                            }
+                        }, 80);
+                    })
+                    .catch(err => {
+                        console.error("Mic access blocked:", err);
+                        status.innerHTML = '⚠️ Mic access denied or unsupported.';
+                        status.style.color = '#ff4d4d';
+                    });
             } else {
                 status.innerHTML = '⚠️ Microphone features not supported on this browser.';
                 status.style.color = '#ff4d4d';
@@ -1168,14 +1293,14 @@
 
         function blowNextCandle() {
             if (micThrottle) return;
-            
+
             const containers = Array.from(document.querySelectorAll('.candle-container'));
             const activeCandles = containers.filter(c => !c.querySelector('.flame').classList.contains('out'));
-            
+
             if (activeCandles.length > 0) {
                 micThrottle = true;
                 blowCandle(activeCandles[0]);
-                
+
                 // 800ms natural cooldown throttle between blowings
                 setTimeout(() => {
                     micThrottle = false;
@@ -1183,71 +1308,66 @@
             }
         }
 
-        // ====== HEARTS CURSOR TRAIL ======
-
+        // ====== CURSOR & GLOW ======
         const cursor = document.querySelector('.custom-cursor');
         const mouseGlow = document.querySelector('.mouse-glow');
-        
-        document.addEventListener('mousemove', (e) => {
-            if (cursor) gsap.to(cursor, { x: e.clientX - 15, y: e.clientY - 15, duration: 0.15 });
-            if (mouseGlow) gsap.to(mouseGlow, { x: e.clientX - 150, y: e.clientY - 150, duration: 0.35, ease: "power2.out" });
-        });
 
-        // Click Hearts Sparks
-        document.addEventListener('click', (e) => {
-            // Ignore if clicked candle or button
-            if (e.target.closest('.candle-container') || e.target.closest('.cta-button') || e.target.closest('.mic-btn')) return;
-            
-            for (let i = 0; i < 5; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'click-heart';
-                heart.innerHTML = '💖';
-                heart.style.left = e.clientX + 'px';
-                heart.style.top = e.clientY + 'px';
-                document.body.appendChild(heart);
-                
-                gsap.to(heart, {
-                    y: -130 - Math.random() * 80,
-                    x: (Math.random() - 0.5) * 160,
-                    opacity: 0, 
-                    scale: Math.random() * 0.7 + 0.4,
-                    duration: 1.1 + Math.random() * 0.5,
-                    ease: "power2.out",
-                    onComplete: () => heart.remove()
+        document.addEventListener('mousemove', (e) => {
+            if (mouseGlow) {
+                gsap.to(mouseGlow, {
+                    x: e.clientX - 150,
+                    y: e.clientY - 150,
+                    duration: 0.3,
+                    ease: "power2.out"
                 });
+            }
+
+            if (cursor) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
             }
         });
 
-        // ====== BACKGROUND MUSIC STATE CONTINUITY (Preserves F5 Reload detection) ======
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('a, button, .interactive, .hoverable, .cta-button, .mic-btn, .music-toggle, .candle-container, [role="button"]')) {
+                if (cursor) cursor.classList.add('hovered');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('a, button, .interactive, .hoverable, .cta-button, .mic-btn, .music-toggle, .candle-container, [role="button"]')) {
+                if (cursor) cursor.classList.remove('hovered');
+            }
+        });
+
+        // ====== CLICK HEARTS REMOVED ======
+
+        // ====== BACKGROUND MUSIC CONTROLS ======
+        window.addEventListener("click", () => {
+            const music = document.getElementById("bgMusic");
+            if (music) {
+                music.play().catch(e => console.log(e));
+            }
+        }, { once: true });
+
+        function toggleMusic() {
+            const music = document.getElementById("bgMusic");
+            if (music) {
+                if (music.paused) {
+                    music.play().catch(e => console.log(e));
+                } else {
+                    music.pause();
+                }
+            }
+        }
 
         window.addEventListener('load', () => {
             const audio = document.getElementById('bgMusic');
             if (audio) {
-                audio.volume = 0.5;
-                
-                // Reset music back to start ONLY when user triggers manual reload
-                if (performance.getEntriesByType("navigation") && 
-                    performance.getEntriesByType("navigation")[0] && 
-                    performance.getEntriesByType("navigation")[0].type === "reload") {
-                    sessionStorage.removeItem('bgMusicTime');
-                }
-                
-                const savedTime = sessionStorage.getItem('bgMusicTime');
-                if (savedTime) audio.currentTime = parseFloat(savedTime);
-                
+                audio.volume = 0.4;
                 audio.play().catch(err => {
-                    console.log("Autoplay caught. Waiting for initial page click to play music.");
-                    document.addEventListener('click', () => {
-                        audio.play().catch(e => console.log(e));
-                    }, { once: true });
+                    console.log("Autoplay blocked, waiting for user click.");
                 });
-                
-                // Keep track of audio track progress in sessionStorage
-                setInterval(() => {
-                    if (audio && !audio.paused) {
-                        sessionStorage.setItem('bgMusicTime', audio.currentTime);
-                    }
-                }, 100);
             }
         });
 
@@ -1256,7 +1376,7 @@
             if (e.target.closest('.cta-button')) {
                 e.preventDefault();
                 gsap.to('body', {
-                    opacity: 0, 
+                    opacity: 0,
                     duration: 1,
                     onComplete: () => { window.location.href = 'cause.html'; }
                 });
@@ -1264,4 +1384,5 @@
         });
     </script>
 </body>
+
 </html>

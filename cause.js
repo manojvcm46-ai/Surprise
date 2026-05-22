@@ -3,71 +3,71 @@ const reasons = [
     { 
         text: "Every moment with you feels like my favorite dream come true. I never knew someone could make my life this beautiful until you came into it. 🌸", 
         emoji: "💖",
-        gif: "GIF/love.gif"
+        gif: "gifs/gif1.gif"
     },
     { 
         text: "No matter how hard my day gets, your smile alone is enough to heal everything inside my heart. You are truly my safest place. 🥺💙", 
         emoji: "💞",
-        gif: "GIF/gif2.gif"
+        gif: "gifs/gif2.gif"
     },
     { 
         text: "I don’t just love you… I love the peace, happiness, and comfort I feel whenever I’m with you. You became my whole world slowly and beautifully. ✨", 
         emoji: "🌙",
-        gif: "GIF/love.gif"
+        gif: "gifs/gif1.gif"
     },
     { 
         text: "In every lifetime, in every universe, I would still search for you and choose you again without even thinking twice. 🫶", 
         emoji: "💕",
-        gif: "GIF/gif2.gif"
+        gif: "gifs/gif2.gif"
     },
     { 
         text: "Your love changed me in the most beautiful way possible. You made me softer, happier, stronger, and more complete than ever before. 💖", 
         emoji: "🌸",
-        gif: "GIF/love.gif"
+        gif: "gifs/gif1.gif"
     },
     { 
         text: "Even our silly fights, random calls, teasing moments, and emotional talks became precious memories I’ll keep forever in my heart. 🥹", 
         emoji: "💌",
-        gif: "GIF/gif2.gif"
+        gif: "gifs/gif2.gif"
     },
     { 
         text: "I may not always express it perfectly, but trust me… you are the best thing that has ever happened in my life. 💙", 
         emoji: "✨",
-        gif: "GIF/love.gif"
+        gif: "gifs/gif1.gif"
     },
     { 
         text: "Loving you is not just a feeling anymore… it became my daily happiness, my comfort zone, and my future dream. 🌎", 
         emoji: "💖",
-        gif: "GIF/gif2.gif"
+        gif: "gifs/gif2.gif"
     },
     { 
         text: "I want more rainy rides, late-night talks, random trips, warm hugs, and peaceful moments with you for the rest of my life. 🚗💕", 
         emoji: "🌧️",
-        gif: "GIF/love.gif"
+        gif: "gifs/gif1.gif"
     },
     { 
         text: "One day, all these video calls will turn into real mornings together, real hugs, real laughter, and a forever life beside each other. 💍", 
         emoji: "🥺",
-        gif: "GIF/gif2.gif"
+        gif: "gifs/gif2.gif"
     },
     { 
         text: "You are not just my girlfriend… you are my peace, my happiness, my home, and the person I want in every chapter of my future. ✨", 
         emoji: "💞",
-        gif: "GIF/love.gif"
+        gif: "gifs/gif1.gif"
     },
     { 
         text: "No matter what happens in life, one thing will always stay constant — my love for you will never fade. Ever. 💙", 
         emoji: "💖",
-        gif: "GIF/gif2.gif"
+        gif: "gifs/gif2.gif"
     }
 ];
 
 // Cat Memes Database
 const memes = [
-    { text: "Me after your one text 😭💖", gif: "GIF/love.gif" },
-    { text: "Average mood after seeing your selfie 📈", gif: "GIF/gif2.gif" },
-    { text: "Me pretending not to miss you 🥲", gif: "GIF/love.gif" },
-    { text: "POV: You replied in 2 seconds 😭", gif: "GIF/gif2.gif" }
+    { text: "Me after your one text 😭💖", gif: "gifs/gif1.gif" },
+    { text: "Average mood after seeing your selfie 📈", gif: "gifs/gif2.gif" },
+    { text: "Me pretending not to miss you 🥲", gif: "gifs/gif1.gif" },
+    { text: "POV: You replied in 2 seconds 😭", gif: "gifs/gif2.gif" }
 ];
 
 // State management
@@ -226,13 +226,6 @@ const cursor = document.querySelector('.custom-cursor');
 const mouseGlow = document.querySelector('.mouse-glow');
 
 document.addEventListener('mousemove', (e) => {
-    if (cursor) {
-        gsap.to(cursor, {
-            x: e.clientX - 15,
-            y: e.clientY - 15,
-            duration: 0.2
-        });
-    }
     if (mouseGlow) {
         gsap.to(mouseGlow, {
             x: e.clientX - 150,
@@ -241,32 +234,98 @@ document.addEventListener('mousemove', (e) => {
             ease: "power2.out"
         });
     }
+
+    if (cursor) {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    }
 });
 
-// Click heart explosion particle effect
+// Add hover effects for buttons/cards to make cursor grow
+document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('a, button, .interactive, .hoverable, .cta-button, .shuffle-button, .close-meme, .music-toggle, [role="button"]')) {
+        if (cursor) cursor.classList.add('hovered');
+    }
+});
+
+document.addEventListener('mouseout', (e) => {
+    if (e.target.closest('a, button, .interactive, .hoverable, .cta-button, .shuffle-button, .close-meme, .music-toggle, [role="button"]')) {
+        if (cursor) cursor.classList.remove('hovered');
+    }
+});
+
+// ====== ROMANTIC GIF SHOWER ======
+const gifs = [
+    "gifs/gif1.gif",
+    "gifs/gif2.gif",
+    "gifs/gif3.gif",
+    "gifs/gif4.gif",
+    "gifs/gif5.gif",
+    "gifs/gif6.gif",
+    "gifs/gif7.gif",
+    "gifs/gif8.gif",
+    "gifs/gif9.gif",
+    "gifs/gif10.gif",
+    "gifs/gif11.gif",
+    "gifs/gif12.gif"
+];
+
+let lastGifIndex = -1;
+
+function getRandomGif() {
+    let index = Math.floor(Math.random() * gifs.length);
+    while (index === lastGifIndex && gifs.length > 1) {
+        index = Math.floor(Math.random() * gifs.length);
+    }
+    lastGifIndex = index;
+    return gifs[index];
+}
+
+// Click and romantic GIF shower effect (Click Hearts completely removed)
 document.addEventListener('click', (e) => {
     if (e.target.closest('.shuffle-button') && currentReasonIndex === reasons.length) {
         return; // Avoid intercepting cta redirects
     }
 
-    for (let i = 0; i < 6; i++) {
-        const heart = document.createElement('div');
-        heart.className = 'click-heart';
-        heart.innerHTML = '💖';
-        heart.style.left = e.clientX + 'px';
-        heart.style.top = e.clientY + 'px';
-        document.body.appendChild(heart);
+    // 1. Spawn a romantic floating GIF
+    const gif = document.createElement("img");
+    gif.src = getRandomGif();
+    gif.classList.add("floating-gif");
+    gif.style.left = e.clientX + "px";
+    gif.style.top = e.clientY + "px";
 
-        gsap.to(heart, {
-            y: -120 - Math.random() * 80,
-            x: (Math.random() - 0.5) * 160,
+    // Random rotation and scale for premium feel
+    const randomRotation = (Math.random() - 0.5) * 40; // -20deg to 20deg
+    const randomScale = Math.random() * 0.3 + 0.85;     // 0.85 to 1.15
+
+    gsap.set(gif, {
+        xPercent: -50,
+        yPercent: -50,
+        scale: 0.3,
+        rotation: randomRotation,
+        opacity: 0
+    });
+
+    document.body.appendChild(gif);
+
+    // Beautiful smooth floating animation and scaling via GSAP
+    gsap.timeline()
+        .to(gif, {
+            opacity: 1,
+            scale: randomScale,
+            duration: 0.5,
+            ease: "back.out(1.7)"
+        })
+        .to(gif, {
+            y: "-=220",
+            rotation: randomRotation + (Math.random() > 0.5 ? 20 : -20),
+            scale: randomScale * 1.3,
             opacity: 0,
-            scale: Math.random() * 0.6 + 0.4,
-            duration: 1 + Math.random() * 0.5,
-            ease: "power2.out",
-            onComplete: () => heart.remove()
+            duration: 2.5,
+            ease: "power1.out",
+            delay: 0.3,
+            onComplete: () => gif.remove()
         });
-    }
 });
 
 // Floating love words drifting up
@@ -304,22 +363,31 @@ function spawnLoveText() {
 setInterval(createFloatingElement, 2000);
 setInterval(spawnLoveText, 3000);
 
-// Start background music
+// Start background music and configure mute/unmute
+window.addEventListener("click", () => {
+    const music = document.getElementById("bgMusic");
+    if (music) {
+        music.play().catch(e => console.log(e));
+    }
+}, { once: true });
+
+function toggleMusic() {
+    const music = document.getElementById("bgMusic");
+    if (music) {
+        if (music.paused) {
+            music.play().catch(e => console.log(e));
+        } else {
+            music.pause();
+        }
+    }
+}
+
 window.addEventListener('load', () => {
     const audio = document.getElementById('bgMusic');
     if (audio) {
-        audio.volume = 0.5;
-        if (performance.getEntriesByType("navigation")[0].type === "reload") {
-            sessionStorage.removeItem('bgMusicTime');
-        }
-        const savedTime = sessionStorage.getItem('bgMusicTime');
-        if (savedTime) audio.currentTime = parseFloat(savedTime);
+        audio.volume = 0.4;
         audio.play().catch(err => {
             console.log("Autoplay blocked, waiting for user click.");
-            document.addEventListener('click', () => {
-                audio.play().catch(e => console.log(e));
-            }, { once: true });
         });
-        setInterval(() => sessionStorage.setItem('bgMusicTime', audio.currentTime), 100);
     }
 });

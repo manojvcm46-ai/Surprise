@@ -3,7 +3,7 @@
 // ==========================================
 
 // Global DOM references
-const cursor = document.querySelector('.cursor');
+const cursor = document.querySelector('.custom-cursor');
 const mouseGlow = document.querySelector('.mouse-glow');
 const audio = document.getElementById('bgMusic');
 const daysElement = document.getElementById('days-val');
@@ -15,34 +15,33 @@ const secondsElement = document.getElementById('seconds-val');
 document.addEventListener('mousemove', (e) => {
     if (mouseGlow) {
         gsap.to(mouseGlow, {
-            x: e.clientX - 225, // Centered on cursor (450px wide)
+            x: e.clientX - 225,
             y: e.clientY - 225,
-            duration: 0.5,
+            duration: 0.3,
             ease: "power2.out"
         });
     }
+
     if (cursor) {
-        gsap.to(cursor, {
-            x: e.clientX,
-            y: e.clientY,
-            duration: 0.1,
-            ease: "power1.out"
-        });
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
     }
 });
 
 // Add hover effects for buttons/cards to make cursor grow
-const interactiveElements = document.querySelectorAll('.cta-button-pill, .love-counter-card');
-interactiveElements.forEach(el => {
-    el.addEventListener('mouseenter', () => {
+document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('a, button, .interactive, .hoverable, .cta-button, .choice-btn, .option-btn, .coupon-inner, .seal, .envelope-flap, .cta-button-pill, .love-counter-card, .music-toggle, [role="button"]')) {
         if (cursor) cursor.classList.add('hovered');
-    });
-    el.addEventListener('mouseleave', () => {
-        if (cursor) cursor.classList.remove('hovered');
-    });
+    }
 });
 
-// 2. Click Heart Explosion Particle Effect
+document.addEventListener('mouseout', (e) => {
+    if (e.target.closest('a, button, .interactive, .hoverable, .cta-button, .choice-btn, .option-btn, .coupon-inner, .seal, .envelope-flap, .cta-button-pill, .love-counter-card, .music-toggle, [role="button"]')) {
+        if (cursor) cursor.classList.remove('hovered');
+    }
+});
+
+// 2. Gesture Trigger for Music Autoplay (Click Hearts completely removed)
 document.addEventListener('click', (e) => {
     // Prevent particle trigger when clicking on hidden overlays
     const introScreen = document.querySelector('.intro-screen');
@@ -52,55 +51,34 @@ document.addEventListener('click', (e) => {
 
     // Attempt to play music on user gesture to bypass autoplay blocks
     tryPlayMusic();
-
-    // Spawn heart particles
-    for (let i = 0; i < 7; i++) {
-        const heart = document.createElement('div');
-        heart.className = 'click-heart';
-        heart.innerHTML = ['💖', '💕', '💙', '💝', '✨'][Math.floor(Math.random() * 5)];
-        heart.style.left = e.clientX + 'px';
-        heart.style.top = e.clientY + 'px';
-        document.body.appendChild(heart);
-
-        const angle = Math.random() * Math.PI * 2;
-        const velocity = 80 + Math.random() * 90;
-        const targetX = e.clientX + Math.cos(angle) * velocity;
-        const targetY = e.clientY + Math.sin(angle) * velocity - 50; // drift slightly upward
-
-        gsap.to(heart, {
-            x: targetX,
-            y: targetY,
-            opacity: 0,
-            scale: Math.random() * 0.7 + 0.4,
-            rotation: Math.random() * 360,
-            duration: 1.2 + Math.random() * 0.4,
-            ease: "power2.out",
-            onComplete: () => heart.remove()
-        });
-    }
 });
 
-// 3. Audio Handlers (Autoplay Bypass & Seamless Nav persistence)
+// 3. Audio Handlers (Autoplay Bypass & Mute/Unmute toggle)
 function tryPlayMusic() {
-    if (audio && audio.paused) {
-        // Retrieve and restore last audio state time if exists
-        const savedTime = sessionStorage.getItem('bgMusicTime');
-        if (savedTime) {
-            audio.currentTime = parseFloat(savedTime);
-        }
-        audio.volume = 0.45;
-        audio.play().catch(e => console.log("Audio autoplay deferred until gesture:", e));
+    const music = document.getElementById("bgMusic");
+    if (music && music.paused) {
+        music.play().catch(e => console.log("Audio autoplay deferred until gesture:", e));
     }
 }
 
-// Track current time of background audio for next page continuity
-if (audio) {
-    setInterval(() => {
-        if (!audio.paused) {
-            sessionStorage.setItem('bgMusicTime', audio.currentTime);
+function toggleMusic() {
+    const music = document.getElementById("bgMusic");
+    if (music) {
+        if (music.paused) {
+            music.play().catch(e => console.log(e));
+        } else {
+            music.pause();
         }
-    }, 200);
+    }
 }
+
+// Set initial volume safely on load
+window.addEventListener("DOMContentLoaded", () => {
+    const music = document.getElementById("bgMusic");
+    if (music) {
+        music.volume = 0.4;
+    }
+});
 
 // 4. Live Relationship Counter Ticker
 const relationshipStartDate = new Date("2022-05-15T00:00:00");
@@ -222,7 +200,7 @@ function startMainPage() {
         delay: 0.8
     });
 
-    gsap.from('.next-btn', {
+    gsap.from('.cake-btn', {
         scale: 0.8,
         opacity: 0,
         y: 35,

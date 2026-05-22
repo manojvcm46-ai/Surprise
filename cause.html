@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <script>(function(){var u=new Date("May 26, 2026 00:00:00").getTime();if(Date.now()<u&&localStorage.getItem('birthday_unlocked')!=='true'){window.location.replace("index.html");}})();</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Why You're My Best Friend! 💖</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -14,10 +15,14 @@
 
 <body>
     <!-- Background Music Audio Tag -->
-    <audio id="bgMusic" loop>
-        <source src="Music/Neeyum Nanum.mpeg" type="audio/mpeg">
-        <source src="https://archive.org/download/HappyBirthdayInstrumentalPianoViaInstrumentals.com.ng/Happy%20Birthday%20Instrumental%20Piano%20via%20Instrumentals.com.ng.mp3" type="audio/mpeg">
+    <audio id="bgMusic" autoplay loop>
+        <source src="Music/cause.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- Floating Music Button -->
+    <button class="music-toggle" onclick="toggleMusic()">
+        🎵
+    </button>
 
     <!-- Mouse Tracking Glow Spotlight -->
     <div class="mouse-glow"></div>
@@ -49,12 +54,55 @@
     <div class="meme-popup" id="meme-popup" style="display: none;">
         <span class="close-meme" id="close-meme">&times;</span>
         <div class="meme-content">
-            <img src="GIF/love.gif" id="meme-img" alt="Cute Meme Reaction">
+            <img src="gifs/gif1.gif" id="meme-img" alt="Cute Meme Reaction">
             <p id="meme-caption">Me after your one text 😭💖</p>
         </div>
     </div>
 
+    <!-- Floating Romantic GIF Popup -->
+    <div class="gif-popup">
+        <img id="popupGif" src="gifs/gif1.gif" alt="Romantic GIF">
+    </div>
+
     <script src="cause.js"></script>
+
+    <script>
+        // ====== FLOATING GIF POPUP AUTO-SHUFFLE ======
+        const popupGifs = [
+            "gifs/gif1.gif",
+            "gifs/gif2.gif",
+            "gifs/gif3.gif",
+            "gifs/gif4.gif",
+            "gifs/gif5.gif",
+            "gifs/gif6.gif",
+            "gifs/gif7.gif",
+            "gifs/gif8.gif",
+            "gifs/gif9.gif",
+            "gifs/gif10.gif",
+            "gifs/gif11.gif",
+            "gifs/gif12.gif"
+        ];
+
+        const popupGif = document.getElementById("popupGif");
+        let lastPopupGifIndex = 0;
+
+        function changePopupGif() {
+            let index = Math.floor(Math.random() * popupGifs.length);
+            while (index === lastPopupGifIndex && popupGifs.length > 1) {
+                index = Math.floor(Math.random() * popupGifs.length);
+            }
+            lastPopupGifIndex = index;
+
+            popupGif.style.opacity = "0";
+
+            setTimeout(() => {
+                popupGif.src = popupGifs[index];
+                popupGif.style.opacity = "1";
+            }, 400);
+        }
+
+        setInterval(changePopupGif, 3000);
+    </script>
 </body>
 
 </html>

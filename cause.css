@@ -18,21 +18,32 @@ body {
 }
 
 .custom-cursor {
-    width: 30px;
-    height: 30px;
     position: fixed;
-    top: 0;
-    left: 0;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ff4fd8, #8f5bff);
+    box-shadow: 0 0 20px #ff4fd8;
     pointer-events: none;
-    z-index: 9999;
-    mix-blend-mode: difference;
-    transition: transform 0.1s;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s;
+    animation: cursorPulse 2s infinite ease-in-out;
 }
 
-.custom-cursor svg {
-    width: 100%;
-    height: 100%;
-    filter: drop-shadow(0 0 5px rgba(255, 182, 193, 0.5));
+@keyframes cursorPulse {
+    0%, 100% {
+        box-shadow: 0 0 15px #ff4fd8, 0 0 5px #8f5bff;
+    }
+    50% {
+        box-shadow: 0 0 30px #ff4fd8, 0 0 15px #8f5bff;
+    }
+}
+
+.custom-cursor.hovered {
+    transform: translate(-50%, -50%) scale(1.6);
+    background: linear-gradient(45deg, #8f5bff, #ff4fd8);
+    box-shadow: 0 0 35px #8f5bff, 0 0 15px #ff4fd8;
 }
 
 .container {
@@ -295,4 +306,167 @@ h1 {
 @keyframes rotateParticle {
     0% { transform: scale(1) rotate(0deg); }
     100% { transform: scale(0.2) rotate(360deg); }
+}
+
+/* Premium Glassmorphism Music Toggle Button */
+.music-toggle {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10000;
+    box-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.3),
+                inset 0 0 15px rgba(255, 255, 255, 0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: floatBtn 3s ease-in-out infinite;
+}
+
+.music-toggle:hover {
+    transform: scale(1.15) rotate(15deg);
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 25px rgba(255, 105, 180, 0.8),
+                0 0 10px rgba(186, 85, 211, 0.6);
+    border-color: rgba(255, 255, 255, 0.7);
+}
+
+.music-toggle:active {
+    transform: scale(0.9);
+}
+
+@keyframes floatBtn {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+/* Ensure mobile compatibility by keeping hover effects clean on touch screens */
+@media (max-width: 768px) {
+    .music-toggle {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+/* Premium Floating Romantic GIF Shower Style */
+.floating-gif {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 16px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.5), 
+                inset 0 0 10px rgba(255, 255, 255, 0.4);
+    will-change: transform, opacity;
+}
+
+@media (max-width: 768px) {
+    .floating-gif {
+        width: 90px;
+        height: 90px;
+        border-width: 2px;
+    }
+}
+
+/* ========== Floating Romantic GIF Popup ========== */
+.gif-popup {
+    position: fixed;
+    right: 25px;
+    bottom: 100px;
+    width: 140px;
+    height: 140px;
+    z-index: 9998;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 24px;
+    padding: 8px;
+    border: 2px solid rgba(255, 105, 180, 0.4);
+    box-shadow:
+        0 0 25px rgba(255, 105, 180, 0.35),
+        0 0 10px rgba(186, 85, 211, 0.2),
+        inset 0 0 12px rgba(255, 255, 255, 0.15);
+    animation: floatGif 3.5s ease-in-out infinite;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                box-shadow 0.4s ease;
+    overflow: hidden;
+}
+
+.gif-popup::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    animation: gifPopupShimmer 5s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 24px;
+}
+
+@keyframes gifPopupShimmer {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+}
+
+.gif-popup:hover {
+    transform: translateY(-8px) scale(1.08);
+    box-shadow:
+        0 0 40px rgba(255, 105, 180, 0.55),
+        0 0 20px rgba(186, 85, 211, 0.35),
+        inset 0 0 15px rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 105, 180, 0.7);
+}
+
+.gif-popup img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+    transition: opacity 0.5s ease;
+    display: block;
+}
+
+@keyframes floatGif {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .gif-popup {
+        width: 100px;
+        height: 100px;
+        right: 15px;
+        bottom: 80px;
+        border-radius: 18px;
+        padding: 6px;
+    }
+    .gif-popup img {
+        border-radius: 14px;
+    }
 }

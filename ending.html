@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <script>(function(){var u=new Date("May 26, 2026 00:00:00").getTime();if(Date.now()<u&&localStorage.getItem('birthday_unlocked')!=='true'){window.location.replace("index.html");}})();</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>And if I had to choose again... 💖</title>
     <!-- GSAP for smooth animations -->
@@ -45,19 +46,32 @@
 
         /* Custom Spotlight & Cursor */
         .custom-cursor {
-            width: 30px;
-            height: 30px;
             position: fixed;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff4fd8, #8f5bff);
+            box-shadow: 0 0 20px #ff4fd8;
             pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: screen;
-            transition: transform 0.1s;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            transition: transform 0.1s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s;
+            animation: cursorPulse 2s infinite ease-in-out;
         }
 
-        .custom-cursor svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.8));
+        @keyframes cursorPulse {
+            0%, 100% {
+                box-shadow: 0 0 15px #ff4fd8, 0 0 5px #8f5bff;
+            }
+            50% {
+                box-shadow: 0 0 30px #ff4fd8, 0 0 15px #8f5bff;
+            }
+        }
+
+        .custom-cursor.hovered {
+            transform: translate(-50%, -50%) scale(1.6);
+            background: linear-gradient(45deg, #8f5bff, #ff4fd8);
+            box-shadow: 0 0 35px #8f5bff, 0 0 15px #ff4fd8;
         }
 
         .mouse-glow {
@@ -183,15 +197,75 @@
                 font-size: 2rem;
             }
         }
+
+        /* Premium Glassmorphism Music Toggle Button */
+        .music-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(255, 255, 255, 0.45);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.3),
+                        inset 0 0 15px rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: floatBtn 3s ease-in-out infinite;
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.15) rotate(15deg);
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.8),
+                        0 0 10px rgba(186, 85, 211, 0.6);
+            border-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .music-toggle:active {
+            transform: scale(0.9);
+        }
+
+        @keyframes floatBtn {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Ensure mobile compatibility by keeping hover effects clean on touch screens */
+        @media (max-width: 768px) {
+            .music-toggle {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 
 <body>
     <!-- Background Music Audio Tag -->
-    <audio id="bgMusic" loop>
-        <source src="Music/Happy_Birthday.mpeg" type="audio/mpeg">
-        <source src="https://archive.org/download/HappyBirthdayInstrumentalPianoViaInstrumentals.com.ng/Happy%20Birthday%20Instrumental%20Piano%20via%20Instrumentals.com.ng.mp3" type="audio/mpeg">
+    <audio id="bgMusic" autoplay loop>
+        <source src="Music/ending.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- Floating Music Button -->
+    <button class="music-toggle" onclick="toggleMusic()">
+        🎵
+    </button>
 
     <canvas id="fireworks-canvas"></canvas>
 
@@ -201,12 +275,7 @@
     <div class="mouse-glow"></div>
 
     <!-- Custom Cursor -->
-    <div class="custom-cursor">
-        <svg viewBox="0 0 24 24">
-            <path fill="#ff69b4"
-                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-        </svg>
-    </div>
+    <div class="custom-cursor"></div>
 
     <div class="container">
         <!-- Cinematic typed message -->
@@ -224,45 +293,34 @@
         const mouseGlow = document.querySelector('.mouse-glow');
 
         document.addEventListener('mousemove', (e) => {
-            if (cursor) {
-                gsap.to(cursor, {
-                    x: e.clientX - 15,
-                    y: e.clientY - 15,
-                    duration: 0.15
-                });
-            }
             if (mouseGlow) {
                 gsap.to(mouseGlow, {
-                    x: e.clientX - 200,
-                    y: e.clientY - 200,
+                    x: e.clientX - 150,
+                    y: e.clientY - 150,
                     duration: 0.3,
                     ease: "power2.out"
                 });
             }
-        });
 
-        // Click heart explosion particle effect (glowing white/pink in dark)
-        document.addEventListener('click', (e) => {
-            for (let i = 0; i < 8; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'click-heart';
-                heart.innerHTML = ['💖', '✨', '🌸', '💕'][Math.floor(Math.random() * 4)];
-                heart.style.left = e.clientX + 'px';
-                heart.style.top = e.clientY + 'px';
-                heart.style.textShadow = '0 0 10px rgba(255, 105, 180, 0.8)';
-                document.body.appendChild(heart);
-
-                gsap.to(heart, {
-                    y: e.clientY - 150 - Math.random() * 80,
-                    x: e.clientX + (Math.random() - 0.5) * 200,
-                    opacity: 0,
-                    scale: Math.random() * 0.8 + 0.4,
-                    duration: 1.2 + Math.random() * 0.6,
-                    ease: "power2.out",
-                    onComplete: () => heart.remove()
-                });
+            if (cursor) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
             }
         });
+
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('a, button, .interactive, .hoverable, .cta-button, .music-toggle, [role="button"]')) {
+                if (cursor) cursor.classList.add('hovered');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('a, button, .interactive, .hoverable, .cta-button, .music-toggle, [role="button"]')) {
+                if (cursor) cursor.classList.remove('hovered');
+            }
+        });
+
+        // Click heart explosion particle effect completely removed
 
         // Typewriter sequence
         const textToType = "And if I had to love someone again... it would still be you 💖";
@@ -461,27 +519,36 @@
             }, 3000);
         }
 
+        // ====== MUSIC ======
+        window.addEventListener("click", () => {
+            const music = document.getElementById("bgMusic");
+            if (music) {
+                music.play().catch(e => console.log(e));
+            }
+        }, { once: true });
+
+        window.toggleMusic = function() {
+            const music = document.getElementById("bgMusic");
+            if (music) {
+                if (music.paused) {
+                    music.play().catch(e => console.log(e));
+                } else {
+                    music.pause();
+                }
+            }
+        }
+
         // Initialize typing and background music on page load
         window.addEventListener('load', () => {
             // Delay typing start slightly for dramatic entry
             setTimeout(typeLetter, 1200);
 
-            // Music loop
             const audio = document.getElementById('bgMusic');
             if (audio) {
-                audio.volume = 0.55;
-                if (performance.getEntriesByType("navigation")[0].type === "reload") {
-                    sessionStorage.removeItem('bgMusicTime');
-                }
-                const savedTime = sessionStorage.getItem('bgMusicTime');
-                if (savedTime) audio.currentTime = parseFloat(savedTime);
+                audio.volume = 0.4;
                 audio.play().catch(err => {
                     console.log("Autoplay blocked, waiting for user click.");
-                    document.addEventListener('click', () => {
-                        audio.play().catch(e => console.log(e));
-                    }, { once: true });
                 });
-                setInterval(() => sessionStorage.setItem('bgMusicTime', audio.currentTime), 100);
             }
         });
     </script>
