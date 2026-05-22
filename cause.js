@@ -77,14 +77,42 @@ const shuffleButton = document.querySelector('.shuffle-button');
 const reasonCounter = document.querySelector('.reason-counter');
 let isTransitioning = false;
 
-// Create reason card with gif
-function createReasonCard(reason) {
+// Unicode-safe Typewriter function
+function typeWriter(element, text, speed, callback) {
+    const chars = Array.from(text);
+    let i = 0;
+    
+    // Create text span and cursor span
+    const textSpan = document.createElement('span');
+    const cursorSpan = document.createElement('span');
+    cursorSpan.className = 'typing-cursor';
+    cursorSpan.textContent = '|';
+    
+    element.appendChild(textSpan);
+    element.appendChild(cursorSpan);
+    
+    function type() {
+        if (i < chars.length) {
+            textSpan.textContent += chars[i];
+            i++;
+            setTimeout(type, speed);
+        } else {
+            cursorSpan.remove();
+            if (callback) callback();
+        }
+    }
+    
+    type();
+}
+
+// Create reason card with gif and typing effect
+function createReasonCard(reason, onComplete) {
     const card = document.createElement('div');
     card.className = 'reason-card';
     
     const text = document.createElement('div');
     text.className = 'reason-text';
-    text.innerHTML = `${reason.emoji} ${reason.text}`;
+    text.innerHTML = `<span style="font-size: 1.4rem; margin-right: 8px;">${reason.emoji}</span>`;
     
     const gifOverlay = document.createElement('div');
     gifOverlay.className = 'gif-overlay';
@@ -97,7 +125,11 @@ function createReasonCard(reason) {
         opacity: 0,
         y: 50,
         duration: 0.5,
-        ease: "back.out"
+        ease: "back.out",
+        onComplete: () => {
+            // Start typing once the card pops up
+            typeWriter(text, reason.text, 25, onComplete);
+        }
     });
 
     return card;
@@ -138,45 +170,74 @@ function displayNewReason() {
     isTransitioning = true;
 
     if (currentReasonIndex < reasons.length) {
-        const card = createReasonCard(reasons[currentReasonIndex]);
+        // Pass complete callback that handles re-enabling clicks and final button/ending checks
+        const card = createReasonCard(reasons[currentReasonIndex], () => {
+            isTransitioning = false;
+
+            // Check if we should transform the button to final glowing button
+            if (currentReasonIndex === reasons.length) {
+                gsap.to(shuffleButton, {
+                    scale: 1.1,
+                    duration: 0.5,
+                    ease: "elastic.out",
+                    onComplete: () => {
+                        shuffleButton.textContent = "Thank You For Existing 💖";
+                        shuffleButton.classList.add('story-mode', 'final-thank-you');
+                    }
+                });
+
+                // Animate the ending-section!
+                const teddyHug = document.querySelector('.teddy-hug');
+                const endingText = document.querySelector('.ending-text');
+                
+                if (teddyHug && endingText) {
+                    gsap.timeline()
+                        .to(teddyHug, {
+                            scale: 1,
+                            duration: 0.8,
+                            ease: "back.out(1.7)",
+                            delay: 0.5
+                        })
+                        .to(endingText, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.8,
+                            ease: "power2.out"
+                        }, "-=0.3");
+                }
+            }
+        });
+        
         reasonsContainer.appendChild(card);
+        
+        // Gently scroll the new card into view only if it's below the fold
+        setTimeout(() => {
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
         
         // Update counter
         reasonCounter.textContent = `Reason ${currentReasonIndex + 1} of ${reasons.length}`;
         
         currentReasonIndex++;
 
-        // Trigger Cat Meme Popup (40% probability)
+        // Trigger Cat Meme Popup (45% probability)
         if (Math.random() < 0.45) {
             setTimeout(triggerRandomMeme, 300);
         }
 
-        // Check if we should transform the button
-        if (currentReasonIndex === reasons.length) {
-            gsap.to(shuffleButton, {
-                scale: 1.1,
-                duration: 0.5,
-                ease: "elastic.out",
-                onComplete: () => {
-                    shuffleButton.textContent = "Enter Our Storylane 💫";
-                    shuffleButton.classList.add('story-mode');
-                }
-            });
-        }
-
         // Create floating elements
         createFloatingElement();
-        
-        setTimeout(() => {
-            isTransitioning = false;
-        }, 500);
     } else {
         // Fade out body and navigate smoothly to the next page (last.html)
+        const music = document.getElementById("bgMusic");
+        if (music) {
+            gsap.to(music, { volume: 0, duration: 1, ease: "power1.inOut" });
+        }
         gsap.to('body', {
             opacity: 0,
             duration: 1,
             onComplete: () => {
-                window.location.href = 'last.html';
+                window.location.href = 'last.html' + (window._a ? '?access=true' : '');
             }
         });
     }
@@ -366,7 +427,8 @@ setInterval(spawnLoveText, 3000);
 // Start background music and configure mute/unmute
 window.addEventListener("click", () => {
     const music = document.getElementById("bgMusic");
-    if (music) {
+    if (music && music.paused) {
+        music.volume = 0;
         music.play().catch(e => console.log(e));
     }
 }, { once: true });
@@ -375,6 +437,7 @@ function toggleMusic() {
     const music = document.getElementById("bgMusic");
     if (music) {
         if (music.paused) {
+            music.volume = 0;
             music.play().catch(e => console.log(e));
         } else {
             music.pause();
@@ -385,7 +448,10 @@ function toggleMusic() {
 window.addEventListener('load', () => {
     const audio = document.getElementById('bgMusic');
     if (audio) {
-        audio.volume = 0.4;
+        audio.volume = 0;
+        audio.addEventListener('play', () => {
+            gsap.to(audio, { volume: 0.4, duration: 1.5, ease: "power1.out" });
+        });
         audio.play().catch(err => {
             console.log("Autoplay blocked, waiting for user click.");
         });

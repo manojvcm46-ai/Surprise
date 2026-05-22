@@ -2,25 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>
+        // Strict real-time date check — NO localStorage, fresh check every load
+        (function () {
+            const unlockDate = new Date("May 26, 2026 00:00:00").getTime();
+            const now = new Date().getTime();
+            if (now >= unlockDate) {
+                window.location.replace("start.html");
+            }
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Love Story Begins Soon 💖</title>
+    <title>4 Years of Endless Love 💞</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💖</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script>
-        // Immediate check — if already unlocked or past date, skip lock screen
-        (function() {
-            const unlockDate = new Date("May 26, 2026 00:00:00").getTime();
-            const now = new Date().getTime();
-            const isUnlocked = localStorage.getItem('birthday_unlocked') === 'true';
-            if (now >= unlockDate || isUnlocked) {
-                window.location.replace("start.html");
-            }
-        })();
-    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap');
 
@@ -211,22 +213,46 @@
         /* ========== TITLE ========== */
         .lock-title {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
+            font-size: 2.4rem;
             font-weight: 700;
             text-align: center;
-            background: linear-gradient(135deg, #ff80bf, #e879f9, #c084fc, #ff80bf);
-            background-size: 300% 300%;
+            background: linear-gradient(135deg, #ff80bf, #e879f9, #7dd3fc, #c084fc, #ff80bf);
+            background-size: 400% 400%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: titleGradient 6s ease infinite;
-            filter: drop-shadow(0 0 15px rgba(255, 128, 191, 0.4));
-            line-height: 1.3;
+            animation: titleGradient 6s ease infinite, titleFadeIn 1.5s ease-out forwards;
+            filter: drop-shadow(0 0 18px rgba(255, 128, 191, 0.5));
+            line-height: 1.4;
         }
 
         @keyframes titleGradient {
             0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
+        }
+
+        @keyframes titleFadeIn {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .lock-subtitle {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: center;
+            color: rgba(255, 182, 217, 0.6);
+            letter-spacing: 0.3px;
+            line-height: 1.5;
+            margin-top: -0.8rem;
+            opacity: 0;
+            animation: subtitleFadeIn 1.8s ease-out 0.5s forwards;
+            text-shadow: 0 0 12px rgba(255, 105, 180, 0.2);
+        }
+
+        @keyframes subtitleFadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         /* ========== TYPING TEXT ========== */
@@ -537,7 +563,10 @@
 
         @media (max-width: 480px) {
             .lock-title {
-                font-size: 2rem;
+                font-size: 1.6rem;
+            }
+            .lock-subtitle {
+                font-size: 0.85rem;
             }
             .count-card {
                 min-width: 72px;
@@ -598,7 +627,8 @@
         </div>
 
         <!-- Title -->
-        <h1 class="lock-title">Our Love Story Begins Soon 💖</h1>
+        <h1 class="lock-title">4 Years of Endless Love, Fights, Care & Memories 💞</h1>
+        <p class="lock-subtitle">From strangers to soulmates… 4 years and forever to go ✨</p>
 
         <!-- Typing Animation -->
         <div class="typing-container">
@@ -650,7 +680,6 @@
 
             if (distance < 0) {
                 clearInterval(timer);
-                localStorage.setItem('birthday_unlocked', 'true');
                 unlockAndGo();
                 return;
             }
@@ -683,13 +712,23 @@
                 ease: "power2.inOut"
             });
 
+            const music = document.getElementById("bgMusic");
+            if (music) {
+                gsap.to(music, {
+                    volume: 0,
+                    duration: 1.4,
+                    delay: 0.5,
+                    ease: "power1.inOut"
+                });
+            }
+
             gsap.to('body', {
                 opacity: 0,
                 duration: 1.4,
                 delay: 0.5,
                 ease: "power3.inOut",
                 onComplete: () => {
-                    window.location.href = "start.html";
+                    window.location.href = "start.html?access=true";
                 }
             });
         }
@@ -700,8 +739,7 @@
             const code = input.value.trim();
             const errorMsg = document.getElementById('errorMsg');
 
-            if (code.toLowerCase() === 'jerry') {
-                localStorage.setItem('birthday_unlocked', 'true');
+            if (code.toLowerCase() === 'jerrytom') {
                 input.style.borderColor = 'rgba(100, 255, 150, 0.6)';
                 input.style.boxShadow = '0 0 25px rgba(100, 255, 150, 0.2)';
                 errorMsg.classList.remove('visible');
@@ -856,8 +894,8 @@
         // ====== MUSIC ======
         window.addEventListener("click", () => {
             const music = document.getElementById("bgMusic");
-            if (music) {
-                music.volume = 0.2;
+            if (music && music.paused) {
+                music.volume = 0;
                 music.play().catch(e => console.log(e));
             }
         }, { once: true });
@@ -866,7 +904,7 @@
             const music = document.getElementById("bgMusic");
             if (music) {
                 if (music.paused) {
-                    music.volume = 0.2;
+                    music.volume = 0;
                     music.play().catch(e => console.log(e));
                 } else {
                     music.pause();
@@ -877,7 +915,10 @@
         window.addEventListener('load', () => {
             const audio = document.getElementById('bgMusic');
             if (audio) {
-                audio.volume = 0.2;
+                audio.volume = 0;
+                audio.addEventListener('play', () => {
+                    gsap.to(audio, { volume: 0.2, duration: 1.5, ease: "power1.out" });
+                });
                 audio.play().catch(() => {
                     console.log("Autoplay blocked, waiting for user click.");
                 });

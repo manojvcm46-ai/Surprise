@@ -57,6 +57,7 @@ document.addEventListener('click', (e) => {
 function tryPlayMusic() {
     const music = document.getElementById("bgMusic");
     if (music && music.paused) {
+        music.volume = 0;
         music.play().catch(e => console.log("Audio autoplay deferred until gesture:", e));
     }
 }
@@ -65,6 +66,7 @@ function toggleMusic() {
     const music = document.getElementById("bgMusic");
     if (music) {
         if (music.paused) {
+            music.volume = 0;
             music.play().catch(e => console.log(e));
         } else {
             music.pause();
@@ -72,11 +74,14 @@ function toggleMusic() {
     }
 }
 
-// Set initial volume safely on load
+// Set initial volume safely on load and add play fade-in listener
 window.addEventListener("DOMContentLoaded", () => {
     const music = document.getElementById("bgMusic");
     if (music) {
-        music.volume = 0.4;
+        music.volume = 0;
+        music.addEventListener('play', () => {
+            gsap.to(music, { volume: 0.4, duration: 1.5, ease: "power1.out" });
+        });
     }
 });
 

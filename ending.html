@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <script>(function(){var u=new Date("May 26, 2026 00:00:00").getTime();if(Date.now()<u&&localStorage.getItem('birthday_unlocked')!=='true'){window.location.replace("index.html");}})();</script>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>(function(){var u=new Date("May 26, 2026 00:00:00").getTime();if(Date.now()>=u)return;if(location.search.indexOf('access=true')>-1){history.replaceState(null,'',location.pathname);window._a=true;return;}location.replace("index.html");})();</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>And if I had to choose again... 💖</title>
     <!-- GSAP for smooth animations -->
@@ -22,13 +25,14 @@
             min-height: 100vh;
             background: #08080a;
             font-family: 'Quicksand', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             position: relative;
-            padding: 2rem;
+            padding: 3rem 2rem 4rem;
         }
 
         /* Ambient Glow in center */
@@ -96,25 +100,41 @@
             position: relative;
         }
 
-        /* Elegant cinematic message typing */
+        /* Elegant cinematic message container */
         .ending-message {
             font-family: 'Dancing Script', cursive;
-            font-size: 3.2rem;
             color: #ffffff;
-            line-height: 1.8;
-            margin-bottom: 4rem;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 105, 180, 0.4);
-            min-height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            line-height: 1.9;
+            margin-bottom: 3rem;
+            text-align: center;
+            max-width: 700px;
+        }
+
+        .ending-para {
+            font-size: 1.85rem;
+            margin-bottom: 1.8rem;
+            opacity: 0;
+            transform: translateY(20px);
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.3), 0 0 25px rgba(255, 105, 180, 0.25);
+        }
+
+        .ending-para.highlight {
+            color: #ff69b4;
+            font-size: 2.2rem;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.6), 0 0 35px rgba(255, 105, 180, 0.3);
+        }
+
+        .ending-para.sign {
+            font-size: 1.6rem;
+            color: rgba(255, 182, 217, 0.7);
+            margin-top: 1rem;
         }
 
         /* Blinking typing cursor */
         .typing-cursor {
             display: inline-block;
             width: 3px;
-            height: 3.5rem;
+            height: 2rem;
             background-color: #ff69b4;
             margin-left: 5px;
             animation: blink 0.8s infinite;
@@ -184,13 +204,20 @@
                 display: none !important;
             }
 
-            .ending-message {
-                font-size: 2.2rem;
-                min-height: 140px;
+            .ending-para {
+                font-size: 1.4rem;
+            }
+
+            .ending-para.highlight {
+                font-size: 1.7rem;
+            }
+
+            .ending-para.sign {
+                font-size: 1.2rem;
             }
 
             .typing-cursor {
-                height: 2.5rem;
+                height: 1.5rem;
             }
 
             .the-end {
@@ -253,6 +280,219 @@
                 font-size: 20px;
             }
         }
+        /* ========== PROPOSAL SCENE ========== */
+        .proposal-btn {
+            margin-top: 2.5rem;
+            padding: 1.1rem 2.8rem;
+            border: none;
+            border-radius: 60px;
+            background: linear-gradient(135deg, #ff4fa3, #8b5cf6, #ff4fa3);
+            background-size: 200% 200%;
+            color: #fff;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.5), 0 0 60px rgba(139, 92, 246, 0.25);
+            animation: proposalGlow 3s ease-in-out infinite, proposalFloat 2.5s ease-in-out infinite;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .proposal-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: proposalShimmer 2.5s infinite;
+        }
+
+        .proposal-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 0 45px rgba(255, 105, 180, 0.7), 0 0 80px rgba(139, 92, 246, 0.4);
+        }
+
+        .proposal-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes proposalGlow {
+            0%, 100% { background-position: 0% 50%; box-shadow: 0 0 30px rgba(255, 105, 180, 0.5), 0 0 60px rgba(139, 92, 246, 0.25); }
+            50% { background-position: 100% 50%; box-shadow: 0 0 50px rgba(255, 105, 180, 0.7), 0 0 80px rgba(139, 92, 246, 0.4); }
+        }
+
+        @keyframes proposalFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes proposalShimmer {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        /* YES overlay */
+        .yes-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(255, 105, 180, 0.15) 0%, rgba(0, 0, 0, 0.95) 100%);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 99999;
+        }
+
+        .yes-overlay.show {
+            display: flex;
+        }
+
+        .yes-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff80bf, #e879f9, #7dd3fc, #ff80bf);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGradient 4s ease infinite;
+            filter: drop-shadow(0 0 30px rgba(255, 105, 180, 0.8));
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        @keyframes titleGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .yes-sub {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 1.3rem;
+            color: rgba(255, 182, 217, 0.7);
+            margin-top: 1rem;
+            opacity: 0;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.3);
+        }
+
+        .yes-ring {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6));
+        }
+
+        @media (max-width: 768px) {
+            .proposal-btn {
+                font-size: 1.2rem;
+                padding: 0.9rem 2rem;
+            }
+            .yes-text {
+                font-size: 2.8rem;
+            }
+            .yes-ring {
+                font-size: 3.5rem;
+            }
+            .yes-sub {
+                font-size: 1rem;
+            }
+        }
+
+        /* ========== STARRY NIGHT SCENE ========== */
+        .starry-sky {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+
+        .moon-container {
+            position: fixed;
+            top: 40px;
+            right: 50px;
+            width: 80px;
+            height: 80px;
+            z-index: 0;
+            pointer-events: none;
+            filter: drop-shadow(0 0 20px rgba(255, 235, 175, 0.5));
+            animation: floatMoon 8s ease-in-out infinite;
+        }
+
+        .moon {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            box-shadow: 15px 15px 0 0 #ffeecc;
+            transform: rotate(-15deg);
+        }
+
+        @keyframes floatMoon {
+            0%, 100% { transform: translateY(0) rotate(-15deg); }
+            50% { transform: translateY(-8px) rotate(-10deg); }
+        }
+
+        .floating-names {
+            position: fixed;
+            top: 40px;
+            left: 50px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.6), 0 0 20px rgba(139, 92, 246, 0.4);
+            z-index: 1;
+            animation: floatNames 6s ease-in-out infinite;
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        @keyframes floatNames {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-12px) rotate(2deg); }
+        }
+
+        @media (max-width: 768px) {
+            .moon-container {
+                top: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+            }
+            .moon {
+                width: 40px;
+                height: 40px;
+                box-shadow: 10px 10px 0 0 #ffeecc;
+            }
+            .floating-names {
+                font-size: 1.8rem;
+                left: 20px;
+                top: 20px;
+            }
+        }
     </style>
 </head>
 
@@ -277,14 +517,30 @@
     <!-- Custom Cursor -->
     <div class="custom-cursor"></div>
 
+    <!-- Starry Night Scene Elements -->
+    <div class="starry-sky" id="starry-sky"></div>
+    <div class="moon-container">
+        <div class="moon"></div>
+    </div>
+    <div class="floating-names">Tom 💙 Jerry</div>
+
     <div class="container">
-        <!-- Cinematic typed message -->
-        <div class="ending-message">
-            <span id="typed-text"></span><span class="typing-cursor"></span>
+        <!-- Cinematic typed messages -->
+        <div class="ending-message" id="ending-message">
         </div>
 
         <!-- Pulser -->
         <div class="the-end" id="the-end-text">The End 🌸</div>
+
+        <!-- Proposal Button -->
+        <button class="proposal-btn" id="proposal-btn" onclick="triggerProposal()">Will You Stay With Me Forever? 💍</button>
+    </div>
+
+    <!-- YES Overlay -->
+    <div class="yes-overlay" id="yes-overlay">
+        <div class="yes-ring" id="yes-ring">💍</div>
+        <div class="yes-text" id="yes-text">She Said YES 💖</div>
+        <div class="yes-sub" id="yes-sub">Forever and always... ✨</div>
     </div>
 
     <script>
@@ -322,43 +578,82 @@
 
         // Click heart explosion particle effect completely removed
 
-        // Typewriter sequence
-        const textToType = "And if I had to love someone again... it would still be you 💖";
-        const typedTextElement = document.getElementById('typed-text');
+        // ====== SEQUENTIAL PARAGRAPH REVEAL ======
+        const endingLines = [
+            { text: "And if I had to choose again…", type: "normal" },
+            { text: "in every lifetime, every universe, every possible story…", type: "normal" },
+            { text: "I would still choose YOU. 💖", type: "highlight" },
+            { text: "Thank you for loving me when I was hard to handle.", type: "normal" },
+            { text: "Thank you for staying during my worst days.", type: "normal" },
+            { text: "Thank you for becoming my peace, my happiness, and my home. 🥺✨", type: "normal" },
+            { text: "No matter how much we fight, cry, laugh, or annoy each other…", type: "normal" },
+            { text: "one thing will never change — my love for you. 💞", type: "highlight" },
+            { text: "From random strangers… to each other's whole world. 🌎", type: "normal" },
+            { text: "4 years passed like seconds with you, and honestly… I still want forever more. 💍", type: "normal" },
+            { text: "One day these calls, texts, and screenshots will become real mornings, real hugs, late-night rides, and a peaceful life together. 🌙🚗💖", type: "normal" },
+            { text: "Until that day comes… promise me one thing —", type: "normal" },
+            { text: "Stay with me. Love me. And never stop being MY Jerry. 🥺💙", type: "highlight" },
+            { text: "Once Again…", type: "normal" },
+            { text: "Happy Birthday, Pondati 🎂💖", type: "highlight" },
+            { text: "Forever Yours, TOM 💌", type: "sign" }
+        ];
+
+        const messageContainer = document.getElementById('ending-message');
         const theEndElement = document.getElementById('the-end-text');
-        const typingCursorElement = document.querySelector('.typing-cursor');
-        let index = 0;
+        let lineIndex = 0;
 
-        function typeLetter() {
-            if (index < textToType.length) {
-                typedTextElement.innerHTML += textToType.charAt(index);
-                index++;
-                
-                // Slightly randomize typing speed for a natural human touch
-                const nextDelay = textToType.charAt(index - 1) === '.' ? 650 : (Math.random() * 70 + 80);
-                setTimeout(typeLetter, nextDelay);
-            } else {
-                // Done typing!
+        function revealNextLine() {
+            if (lineIndex >= endingLines.length) {
+                // All lines done — show "The End"
                 setTimeout(() => {
-                    // Hide the typing cursor nicely
-                    gsap.to(typingCursorElement, {
-                        opacity: 0,
-                        duration: 0.5,
-                        onComplete: () => typingCursorElement.style.display = 'none'
-                    });
-
-                    // Reveal the glowing Pulsing Sign-off: "The End 🌸"
                     gsap.to(theEndElement, {
                         opacity: 1,
                         scale: 1,
                         duration: 2.0,
                         ease: "power2.out"
                     });
-                    
-                    // Trigger gentle final romantic explosion circles
                     startFinalCelebration();
-                }, 1000);
+
+                    // Show proposal button after The End
+                    setTimeout(() => {
+                        const proposalBtn = document.getElementById('proposal-btn');
+                        gsap.to(proposalBtn, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1.2,
+                            ease: "back.out(1.7)"
+                        });
+                        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    }, 2500);
+                }, 800);
+                return;
             }
+
+            const line = endingLines[lineIndex];
+            const para = document.createElement('div');
+            para.className = 'ending-para';
+            if (line.type === 'highlight') para.classList.add('highlight');
+            if (line.type === 'sign') para.classList.add('sign');
+            para.textContent = line.text;
+            messageContainer.appendChild(para);
+
+            // Fade in with GSAP
+            gsap.to(para, {
+                opacity: 1,
+                y: 0,
+                duration: 1.0,
+                ease: "power2.out",
+                onComplete: () => {
+                    // Auto-scroll to bottom
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                }
+            });
+
+            lineIndex++;
+
+            // Delay before next line (longer for highlight lines)
+            const delay = line.type === 'highlight' ? 2800 : 2200;
+            setTimeout(revealNextLine, delay);
         }
 
         // Fireworks implementation
@@ -522,7 +817,8 @@
         // ====== MUSIC ======
         window.addEventListener("click", () => {
             const music = document.getElementById("bgMusic");
-            if (music) {
+            if (music && music.paused) {
+                music.volume = 0;
                 music.play().catch(e => console.log(e));
             }
         }, { once: true });
@@ -531,6 +827,7 @@
             const music = document.getElementById("bgMusic");
             if (music) {
                 if (music.paused) {
+                    music.volume = 0;
                     music.play().catch(e => console.log(e));
                 } else {
                     music.pause();
@@ -538,20 +835,136 @@
             }
         }
 
-        // Initialize typing and background music on page load
+        // Initialize typing, starry sky and background music on page load
         window.addEventListener('load', () => {
-            // Delay typing start slightly for dramatic entry
-            setTimeout(typeLetter, 1200);
+            initStarrySky();
+
+            // Delay reveal start slightly for dramatic entry
+            setTimeout(revealNextLine, 1200);
 
             const audio = document.getElementById('bgMusic');
             if (audio) {
-                audio.volume = 0.4;
+                audio.volume = 0;
+                audio.addEventListener('play', () => {
+                    gsap.to(audio, { volume: 0.4, duration: 1.5, ease: "power1.out" });
+                });
                 audio.play().catch(err => {
                     console.log("Autoplay blocked, waiting for user click.");
                 });
             }
         });
+
+        // ====== STARRY SKY GENERATOR ======
+        function initStarrySky() {
+            const sky = document.getElementById('starry-sky');
+            if (!sky) return;
+            const starCount = window.innerWidth < 768 ? 60 : 120;
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 1; // 1px to 3px
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                
+                const duration = Math.random() * 3 + 2; // 2s to 5s
+                const delay = Math.random() * 5;
+                star.style.animation = `twinkle ${duration}s ease-in-out infinite`;
+                star.style.animationDelay = `${delay}s`;
+                
+                sky.appendChild(star);
+            }
+        }
+        // ====== PROPOSAL SCENE ======
+        function triggerProposal() {
+            const proposalBtn = document.getElementById('proposal-btn');
+            const overlay = document.getElementById('yes-overlay');
+            const yesRing = document.getElementById('yes-ring');
+            const yesText = document.getElementById('yes-text');
+            const yesSub = document.getElementById('yes-sub');
+
+            // Fade out the button
+            gsap.to(proposalBtn, {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.4,
+                onComplete: () => { proposalBtn.style.display = 'none'; }
+            });
+
+            // Massive fireworks burst
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * width;
+                    const targetY = Math.random() * (height * 0.6);
+                    const fw = new Firework(x, targetY);
+                    fw.explode();
+                }, i * 150);
+            }
+
+            // Show YES overlay
+            setTimeout(() => {
+                overlay.classList.add('show');
+
+                // Animate ring
+                gsap.to(yesRing, {
+                    opacity: 1,
+                    duration: 1,
+                    ease: "power2.out"
+                });
+
+                // Animate YES text
+                gsap.to(yesText, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1.5,
+                    delay: 0.5,
+                    ease: "back.out(1.7)"
+                });
+
+                // Animate subtitle
+                gsap.to(yesSub, {
+                    opacity: 1,
+                    duration: 1,
+                    delay: 1.5,
+                    ease: "power2.out"
+                });
+
+                // Keep spawning fireworks in the overlay
+                const celebInterval = setInterval(() => {
+                    for (let i = 0; i < 3; i++) {
+                        const x = Math.random() * width;
+                        const targetY = Math.random() * (height * 0.5);
+                        const fw = new Firework(x, targetY);
+                        fw.explode();
+                    }
+                }, 1500);
+
+                // Spawn celebration hearts
+                const heartInterval = setInterval(() => {
+                    const h = document.createElement('div');
+                    h.className = 'click-heart';
+                    h.innerHTML = ['💖', '💍', '💕', '✨', '💗'][Math.floor(Math.random() * 5)];
+                    h.style.left = Math.random() * 100 + 'vw';
+                    h.style.top = window.innerHeight + 10 + 'px';
+                    h.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                    document.body.appendChild(h);
+                    gsap.to(h, {
+                        y: -(window.innerHeight + 50),
+                        x: (Math.random() - 0.5) * 100,
+                        opacity: 0,
+                        duration: 4 + Math.random() * 3,
+                        ease: "power1.out",
+                        onComplete: () => h.remove()
+                    });
+                }, 300);
+            }, 800);
+        }
+
     </script>
+
+    <link rel="stylesheet" href="secret-messages.css">
+    <script src="secret-messages.js"></script>
 </body>
 
 </html>

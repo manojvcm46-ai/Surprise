@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <script>(function(){var u=new Date("May 26, 2026 00:00:00").getTime();if(Date.now()<u&&localStorage.getItem('birthday_unlocked')!=='true'){window.location.replace("index.html");}})();</script>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>(function(){var u=new Date("May 26, 2026 00:00:00").getTime();if(Date.now()>=u)return;if(location.search.indexOf('access=true')>-1){history.replaceState(null,'',location.pathname);window._a=true;return;}location.replace("index.html");})();</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Beautiful Memory Lane ✨</title>
     <!-- GSAP for beautiful animations -->
@@ -523,7 +526,8 @@
         </div>
 
         <div class="bottom-action">
-            <a href="quiz.html" class="cta-button">Play Romantic Quiz... 🧩</a>
+            <a href="quiz.html" class="cta-button" id="last-next-btn">Play Romantic Quiz... 🧩</a>
+            <script>if(window._a)document.getElementById('last-next-btn').href='quiz.html?access=true';</script>
         </div>
     </div>
 
@@ -631,7 +635,8 @@
             // Start background music and mute/unmute
             window.addEventListener("click", () => {
                 const music = document.getElementById("bgMusic");
-                if (music) {
+                if (music && music.paused) {
+                    music.volume = 0;
                     music.play().catch(e => console.log(e));
                 }
             }, { once: true });
@@ -640,6 +645,7 @@
                 const music = document.getElementById("bgMusic");
                 if (music) {
                     if (music.paused) {
+                        music.volume = 0;
                         music.play().catch(e => console.log(e));
                     } else {
                         music.pause();
@@ -649,7 +655,10 @@
 
             const audio = document.getElementById('bgMusic');
             if (audio) {
-                audio.volume = 0.4;
+                audio.volume = 0;
+                audio.addEventListener('play', () => {
+                    gsap.to(audio, { volume: 0.4, duration: 1.5, ease: "power1.out" });
+                });
                 audio.play().catch(err => {
                     console.log("Autoplay blocked, waiting for user click.");
                 });
@@ -661,15 +670,22 @@
         ctaBtn.addEventListener('click', (e) => {
             e.preventDefault();
             const targetUrl = ctaBtn.getAttribute('href');
+            const music = document.getElementById("bgMusic");
+            if (music) {
+                gsap.to(music, { volume: 0, duration: 1, ease: "power1.inOut" });
+            }
             gsap.to('body', {
                 opacity: 0,
                 duration: 1,
                 onComplete: () => {
-                    window.location.href = targetUrl;
+                    window.location.href = targetUrl + (window._a ? '?access=true' : '');
                 }
             });
         });
     </script>
+
+    <link rel="stylesheet" href="secret-messages.css">
+    <script src="secret-messages.js"></script>
 </body>
 
 </html>

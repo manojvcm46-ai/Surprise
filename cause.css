@@ -73,6 +73,7 @@ h1 {
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    z-index: 2;
 }
 
 .reason-card:hover {
@@ -89,17 +90,19 @@ h1 {
 
 .gif-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.95);
+    inset: 0;
+    background: rgba(255,255,255,0.95);
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s ease;
+
     z-index: 1;
+
+    pointer-events: none;
 }
 
 .reason-card:hover .gif-overlay {
@@ -394,7 +397,8 @@ h1 {
     bottom: 100px;
     width: 140px;
     height: 140px;
-    z-index: 9998;
+    z-index: 50;
+    pointer-events: none;
     background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
@@ -470,3 +474,67 @@ h1 {
         border-radius: 14px;
     }
 }
+
+/* Typing Cursor */
+.typing-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background-color: #ff69b4;
+    margin-left: 3px;
+    vertical-align: middle;
+    animation: cursorBlink 0.8s infinite;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Climax Final Button Styling */
+.shuffle-button.final-thank-you {
+    background: linear-gradient(45deg, #ff4fa3, #8b5cf6, #ff7300);
+    background-size: 200% 200%;
+    animation: glowGradient 4s ease infinite, finalFloat 3s ease-in-out infinite;
+    font-size: 1.4rem;
+    padding: 1.2rem 2.8rem;
+    box-shadow: 0 0 30px rgba(255, 79, 163, 0.6), 0 0 15px rgba(139, 92, 246, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.shuffle-button.final-thank-you:hover {
+    box-shadow: 0 0 45px rgba(255, 79, 163, 0.85), 0 0 25px rgba(139, 92, 246, 0.6);
+}
+
+@keyframes glowGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes finalFloat {
+    0%, 100% { transform: translateY(0) scale(1.1); }
+    50% { transform: translateY(-8px) scale(1.1); }
+}
+
+/* High z-index for buttons to keep them always visible and clickable */
+.shuffle-button,
+.next-btn,
+.music-toggle{
+    position: relative;
+    z-index: 9999 !important;
+}
+
+/* Disable click blocking from background effects */
+.rain-container,
+.pink-particle,
+.mouse-glow,
+.custom-cursor,
+.gif-popup,
+.floating-hearts,
+canvas{
+    pointer-events: none !important;
+}
+
+

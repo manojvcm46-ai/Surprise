@@ -3,7 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <script>(function(){var u=new Date("May 26, 2026 00:00:00").getTime();if(Date.now()<u&&localStorage.getItem('birthday_unlocked')!=='true'){window.location.replace("index.html");}})();</script>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <script>(function(){var u=new Date("May 26, 2026 00:00:00").getTime();if(Date.now()>=u)return;if(location.search.indexOf('access=true')>-1){history.replaceState(null,'',location.pathname);window._a=true;return;}location.replace("index.html");})();</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday AnuSri 💙</title>
     <!-- Favicon to clear 404 errors -->
@@ -111,18 +114,177 @@
                     });
                 }
 
+                const music = document.getElementById("bgMusic");
+                if (music) {
+                    gsap.to(music, { volume: 0, duration: 0.8, ease: "power1.inOut" });
+                }
+
                 document.body.style.transition = "0.8s ease";
                 document.body.style.opacity = "0";
 
                 setTimeout(() => {
-                    window.location.href = "cake.html";
+                    window.location.href = "cake.html" + (window._a ? "?access=true" : "");
                 }, 800);
             }
         </script>
     </div>
 
+    <!-- Teddy Chat Popup -->
+    <div class="teddy-chat" id="teddyChat">
+        <div class="teddy-avatar">🧸</div>
+        <div class="teddy-bubble">
+            <div class="teddy-name">Tom is thinking about you 💭</div>
+            <div class="teddy-msg" id="teddyMsg">You're the prettiest girl in the world 🌸</div>
+        </div>
+    </div>
+
+    <style>
+        .teddy-chat {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+        }
+
+        .teddy-chat.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .teddy-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            box-shadow: 0 4px 20px rgba(255, 105, 180, 0.2);
+            animation: teddyBounce 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes teddyBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .teddy-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 18px 18px 18px 4px;
+            padding: 12px 16px;
+            max-width: 240px;
+            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.15),
+                        inset 0 0 10px rgba(255, 255, 255, 0.05);
+        }
+
+        .teddy-name {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255, 182, 217, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .teddy-msg {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .teddy-chat {
+                bottom: 15px;
+                left: 15px;
+            }
+            .teddy-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 1.3rem;
+            }
+            .teddy-bubble {
+                max-width: 200px;
+                padding: 10px 14px;
+            }
+            .teddy-msg {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+
+    <script>
+        // ====== TEDDY CHAT POPUP MESSAGES ======
+        const teddyMessages = [
+            "You're the prettiest girl in the world 🌸",
+            "Missing you right now... 🥺",
+            "Can we cuddle already? 😭💖",
+            "You're my favorite notification 📱💕",
+            "I love you more than pizza 🍕💗",
+            "Nee illama oru second kooda iruka mudiyala 😤💙",
+            "Pondati... I miss you 🥺",
+            "You make my heart go 💓💓💓",
+            "Today is YOUR day, queen 👑",
+            "Can't stop thinking about you 💭✨",
+            "En Jerry is the cutest 🧸💖",
+            "I'm so proud of you baby 🥹💕",
+            "Wish I could hug you right now 🤗💙",
+            "You + Me = Forever 💍✨",
+            "Happy Birthday di chellam 🎂💖"
+        ];
+
+        const teddyChat = document.getElementById('teddyChat');
+        const teddyMsgEl = document.getElementById('teddyMsg');
+        let teddyMsgIndex = 0;
+
+        function showTeddyMessage() {
+            // Pick random message
+            let idx = Math.floor(Math.random() * teddyMessages.length);
+            while (idx === teddyMsgIndex && teddyMessages.length > 1) {
+                idx = Math.floor(Math.random() * teddyMessages.length);
+            }
+            teddyMsgIndex = idx;
+            teddyMsgEl.textContent = teddyMessages[idx];
+
+            // Show popup
+            teddyChat.classList.add('show');
+
+            // Hide after 4 seconds
+            setTimeout(() => {
+                teddyChat.classList.remove('show');
+            }, 4000);
+        }
+
+        // First popup after 3 seconds, then every 8 seconds
+        setTimeout(() => {
+            showTeddyMessage();
+            setInterval(showTeddyMessage, 8000);
+        }, 3000);
+    </script>
+
     <!-- Script file -->
     <script src="script.js"></script>
+
+    <link rel="stylesheet" href="secret-messages.css">
+    <script src="secret-messages.js"></script>
 </body>
 
 </html>
